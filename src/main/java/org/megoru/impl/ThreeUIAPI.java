@@ -1,10 +1,8 @@
 package org.megoru.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.megoru.entity.Status;
 import org.megoru.entity.api.Client;
 import org.megoru.entity.api.ClientTraffics;
-import org.megoru.io.ResponseHandler;
 import org.megoru.io.UnsuccessfulHttpException;
 
 public interface ThreeUIAPI {
@@ -19,8 +17,9 @@ public interface ThreeUIAPI {
 
     Boolean addClient(int inboundId, @NotNull Client client) throws UnsuccessfulHttpException;
 
-
     ClientTraffics getClientTraffics(String email) throws UnsuccessfulHttpException;
+
+    Boolean updateClient(int inboundId, @NotNull Client client) throws UnsuccessfulHttpException;
 
     /**
      * Setup new Session

@@ -98,6 +98,38 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
+    public Boolean updateClient(int inboundId, @NotNull Client client) throws UnsuccessfulHttpException {
+        HttpUrl url = baseUrl.newBuilder()
+                .addPathSegment("panel") //panel/api/inbounds/updateClient/95e4e7bb-7796-47e7-e8a7-f4055194f776
+                .addPathSegment("api")
+                .addPathSegment("inbounds")
+                .addPathSegment("updateClient")
+                .addPathSegment(client.getId())
+                .build();
+
+        Client[] clients = new Client[1];
+        clients[0] = client;
+
+        JSONObject obj = new JSONObject();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String clientsJsonString = objectMapper.writeValueAsString(clients);
+            obj.put("id", inboundId);
+            obj.put("settings", "{\"clients\":" + clientsJsonString + "}");
+
+            System.out.println(obj);
+        } catch (Exception ignored) {
+        }
+
+        HttpPost request = new HttpPost(url.uri());
+        request.addHeader(HttpHeaders.ACCEPT, "application/json");
+        HttpEntity stringEntity = new StringEntity(obj.toString(), ContentType.APPLICATION_JSON);
+        request.setEntity(stringEntity);
+
+        return post(url, obj, new DefaultResponseTransformer<>(gson, Boolean.class)).isSuccess();
+    }
+
+    @Override
     public void setSession() {
         HttpUrl url = baseUrl.newBuilder()
                 .addPathSegment("login")

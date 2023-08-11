@@ -24,6 +24,8 @@ import org.megoru.entity.api.ClientTraffics;
 import org.megoru.io.DefaultResponseTransformer;
 import org.megoru.io.ResponseTransformer;
 import org.megoru.io.UnsuccessfulHttpException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -31,26 +33,21 @@ import java.util.List;
 
 public class ThreeUIAPIImpl implements ThreeUIAPI {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(ThreeUIAPIImpl.class);
+
     private final HttpUrl baseUrl;
     private BasicCookieStore cookieStore = new BasicCookieStore();
-    private final String searchURL = "https://vpn3.megoru.ru";
     private final Gson gson;
     private final String login;
     private final String password;
     private final boolean devMode;
 
-    protected ThreeUIAPIImpl(String login, String password, boolean devMode) {
+    protected ThreeUIAPIImpl(String login, String password, boolean devMode, String host) {
         this.login = login;
         this.password = password;
         this.devMode = devMode;
-
-        baseUrl = new HttpUrl.Builder()
-                .scheme("https")
-                .host("vpn3.megoru.ru")
-                .build();
-
+        baseUrl = HttpUrl.get(host);
         this.gson = new GsonBuilder().setPrettyPrinting().create();
-
         //Устанавливаем сессию
         setSession();
     }
@@ -73,8 +70,8 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
             String clientsJsonString = objectMapper.writeValueAsString(clients);
             obj.put("id", inboundId);
             obj.put("settings", "{\"clients\":" + clientsJsonString + "}");
-
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            LOGGER.error("addClient: ", e);
         }
 
         HttpPost request = new HttpPost(url.uri());
@@ -86,7 +83,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public ClientTraffics getClientTraffics(String email) throws UnsuccessfulHttpException {
+    public ClientTraffics getClientTraffics(@NotNull String email) throws UnsuccessfulHttpException {
         HttpUrl url = baseUrl.newBuilder()
                 .addPathSegment("panel") //panel/api/inbounds/getClientTraffics/{email}
                 .addPathSegment("api")
@@ -116,9 +113,8 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
             String clientsJsonString = objectMapper.writeValueAsString(clients);
             obj.put("id", inboundId);
             obj.put("settings", "{\"clients\":" + clientsJsonString + "}");
-
-            System.out.println(obj);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            LOGGER.error("updateClient: ", e);
         }
 
         HttpPost request = new HttpPost(url.uri());
@@ -141,7 +137,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
             json.put("username", login);
             json.put("password", password);
         } catch (JSONException e) {
-            e.printStackTrace();
+            LOGGER.error("setSession: ", e);
         }
 
         HttpPost request = new HttpPost(url.uri());
@@ -152,7 +148,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         execute(request);
     }
 
-    private <E> E get(HttpUrl url, ResponseTransformer<E> responseTransformer) {
+    private <E> E get(HttpUrl url, ResponseTransformer<E> responseTransformer) throws UnsuccessfulHttpException  {
         HttpGet request = new HttpGet(url.uri());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
@@ -168,43 +164,43 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         return execute(request, responseTransformer);
     }
 
-    private <E> E execute(ClassicHttpRequest request, ResponseTransformer<E> responseTransformer) {
+    private <E> E execute(ClassicHttpRequest request, ResponseTransformer<E> responseTransformer) throws UnsuccessfulHttpException {
         CloseableHttpClient httpClient = HttpClients
                 .custom()
                 .setConnectionReuseStrategy(((requests, response, context) -> false))
                 .setDefaultCookieStore(cookieStore)
                 .useSystemProperties()
                 .build();
-
+        int statusCode = 0;
+        String body = null;
         try {
             CloseableHttpResponse response = httpClient.execute(request);
 
-            int statusCode = response.getCode();
+            statusCode = response.getCode();
             HttpEntity entity = response.getEntity();
-            String body = entity != null ? EntityUtils.toString(entity) : null;
+            body = entity != null ? EntityUtils.toString(entity) : null;
             if (body == null) body = "{}";
 
             logResponse(response, body);
 
             switch (statusCode) {
-                case 201:
                 case 200: {
                     return responseTransformer.transform(body);
                 }
-                default: {
-
+                case 404: {
+                    LOGGER.info(body);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("execute Exception: ", e);
         } finally {
             try {
                 httpClient.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("execute IOException: ", e);
             }
         }
-        throw new RuntimeException();
+        throw new UnsuccessfulHttpException(statusCode, body);
     }
 
     private void execute(ClassicHttpRequest request) {
@@ -223,15 +219,16 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
                 List<Cookie> cookie = cookieStore.getCookies();
 
                 if (devMode) {
-                    System.out.println("cookie: " + context.getResponse().getVersion());
-                    System.out.println(Arrays.toString(context.getResponse().getHeaders()));
+                    LOGGER.info("cookie: {}\n{}",
+                            context.getResponse().getVersion(),
+                            Arrays.toString(context.getResponse().getHeaders()));
                 }
 
                 if (cookie.isEmpty()) throw new RuntimeException("Cookie is null");
                 else setCookie(cookie.get(0));
             }
         } catch (IOException io) {
-            io.printStackTrace();
+            LOGGER.error("execute cookie: ", io);
         }
     }
 
@@ -241,12 +238,6 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     private void logResponse(ClassicHttpResponse response, String body) {
-        if (!devMode) return;
-//        String status = String.format("StatusCode: %s Reason: %s", response.getCode(), response.getReasonPhrase());
-//        System.out.println(status);
-////        System.out.println(body);
-//        JsonElement jsonElement = JsonParser.parseString(body);
-//        String prettyJsonString = gson.toJson(jsonElement);
-//        System.out.println(prettyJsonString);
+        if (devMode) LOGGER.info("ResponseStatus: {}\nBody: {}", response.getCode(), body);
     }
 }

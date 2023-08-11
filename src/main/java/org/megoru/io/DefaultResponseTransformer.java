@@ -19,8 +19,6 @@ public class DefaultResponseTransformer<E> implements ResponseTransformer<Respon
     @Override
     public ResponseHandler<E> transform(String response) {
         Type responseType = TypeToken.getParameterized(ResponseHandler.class, resultClass).getType();
-        System.out.println(responseType);
-        System.out.println(response);
         return gson.fromJson(response, responseType);
     }
 }

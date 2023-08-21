@@ -1,10 +1,10 @@
-package org.megoru.impl;
+package org.mego.impl;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.megoru.entity.api.Client;
-import org.megoru.entity.api.ClientTraffics;
-import org.megoru.io.UnsuccessfulHttpException;
+import org.mego.entity.api.Client;
+import org.mego.entity.api.ClientTraffics;
+import org.mego.io.UnsuccessfulHttpException;
 
 import java.util.Objects;
 

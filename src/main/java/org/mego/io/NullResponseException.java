@@ -1,4 +1,4 @@
-package org.megoru.io;
+package org.mego.io;
 
 public class NullResponseException extends Exception {
 

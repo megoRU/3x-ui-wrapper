@@ -1,4 +1,4 @@
-package org.megoru.impl;
+package org.mego.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -19,11 +19,11 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.megoru.entity.api.Client;
-import org.megoru.entity.api.ClientTraffics;
-import org.megoru.io.DefaultResponseTransformer;
-import org.megoru.io.ResponseTransformer;
-import org.megoru.io.UnsuccessfulHttpException;
+import org.mego.entity.api.Client;
+import org.mego.entity.api.ClientTraffics;
+import org.mego.io.DefaultResponseTransformer;
+import org.mego.io.ResponseTransformer;
+import org.mego.io.UnsuccessfulHttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package org.megoru.entity.enums;
+package org.mego.entity.enums;
 
 public enum FlowEnum {
 

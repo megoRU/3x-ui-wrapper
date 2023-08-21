@@ -1,4 +1,4 @@
-package org.megoru.entity;
+package org.mego.entity;
 
 public class ErrorResponseToMany {
 

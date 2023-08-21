@@ -1,10 +1,10 @@
-package org.megoru.entity.api;
+package org.mego.entity.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.megoru.entity.enums.FlowEnum;
+import org.mego.entity.enums.FlowEnum;
 
 @Builder
 @Data

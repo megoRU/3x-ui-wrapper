@@ -23,4 +23,7 @@ public class Client {
     private String tgId;
     private String subId;
 
+    public String getFlow() {
+        return flow.getValue();
+    }
 }

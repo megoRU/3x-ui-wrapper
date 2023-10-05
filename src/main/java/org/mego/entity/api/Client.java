@@ -22,8 +22,10 @@ public class Client {
     private boolean enable;
     private String tgId;
     private String subId;
+    private String method;
 
     public String getFlow() {
-        return flow.getValue();
+        if (flow != null) return flow.getValue();
+        else return null;
     }
 }

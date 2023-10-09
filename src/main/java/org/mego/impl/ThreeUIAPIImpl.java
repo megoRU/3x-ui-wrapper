@@ -164,54 +164,48 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         return execute(request, responseTransformer);
     }
 
-    private <E> E execute(ClassicHttpRequest request, ResponseTransformer<E> responseTransformer) throws UnsuccessfulHttpException {
-        CloseableHttpClient httpClient = HttpClients
-                .custom()
+    private CloseableHttpClient createHttpClient() {
+        return HttpClients.custom()
                 .setConnectionReuseStrategy(((requests, response, context) -> false))
                 .setDefaultCookieStore(cookieStore)
                 .useSystemProperties()
                 .build();
-        int statusCode = 0;
-        String body = null;
-        try {
-            CloseableHttpResponse response = httpClient.execute(request);
+    }
 
-            statusCode = response.getCode();
-            HttpEntity entity = response.getEntity();
-            body = entity != null ? EntityUtils.toString(entity) : null;
-            if (body == null) body = "{}";
+    private <E> E execute(ClassicHttpRequest request, ResponseTransformer<E> responseTransformer) throws UnsuccessfulHttpException {
+        try (CloseableHttpClient httpClient = createHttpClient()) {
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getCode();
+                String body = getBodyFromEntity(response.getEntity());
 
-            logResponse(response, body);
+                logResponse(response, body);
 
-            switch (statusCode) {
-                case 200: {
-                    return responseTransformer.transform(body);
-                }
-                case 404: {
-                    LOGGER.info(body);
-                }
+                return handleResponse(statusCode, body, responseTransformer);
+            } catch (IOException | ParseException e) {
+                throw new RuntimeException("Failed to execute HTTP request", e);
             }
-        } catch (Exception e) {
-            LOGGER.error("execute Exception: ", e);
-        } finally {
-            try {
-                httpClient.close();
-            } catch (IOException e) {
-                LOGGER.error("execute IOException: ", e);
-            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to close the HTTP client", e);
         }
+    }
+
+    private <E> E handleResponse(int statusCode, String body, ResponseTransformer<E> responseTransformer) throws UnsuccessfulHttpException {
+        if (statusCode == 200) {
+            return responseTransformer.transform(body);
+        }
+        LOGGER.warn("Unexpected response status: " + statusCode);
         throw new UnsuccessfulHttpException(statusCode, body);
+    }
+
+    private String getBodyFromEntity(HttpEntity entity) throws IOException, ParseException {
+        String body = entity != null ? EntityUtils.toString(entity) : "{}";
+        return body != null ? body : "{}";
     }
 
     private void execute(ClassicHttpRequest request) {
         try {
             HttpClientContext context = HttpClientContext.create();
-            CloseableHttpClient httpClient = HttpClients
-                    .custom()
-                    .setConnectionReuseStrategy(((requests, response, contexts) -> false))
-                    .setDefaultCookieStore(cookieStore)
-                    .useSystemProperties()
-                    .build();
+            CloseableHttpClient httpClient = createHttpClient();
 
             CloseableHttpResponse response = httpClient.execute(request, context);
             try (response) {

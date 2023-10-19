@@ -18,6 +18,26 @@ https://jitpack.io/#megoRU/3x-ui-wrapper
 <dependency>
    <groupId>com.github.megoRU</groupId>
    <artifactId>3x-ui-wrapper</artifactId>
-   <version>1.0</version>
+   <version>1.5</version>
 </dependency>
+```
+
+## Examples
+
+### Get All Comments by bot ID
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder().enableDevMode()
+                .setHost("http://45.15.158.18:2053")
+                .setLogin("admin")
+                .setPassword("admin")
+                .enableDevMode()
+                .build();
+
+        Boolean b = threeUIAPI.deleteClient(1, "af444bd8-9b9b-46c4-9fcd-971153852d89"); //or email 432fdgd
+        System.out.println(b);
+    }
+}
 ```

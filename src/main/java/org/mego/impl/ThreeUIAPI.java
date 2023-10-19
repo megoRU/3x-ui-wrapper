@@ -18,11 +18,17 @@ public interface ThreeUIAPI {
     Boolean addClient(int inboundId, @NotNull Client client) throws UnsuccessfulHttpException;
 
     /**
+     * @param inboundId It`s ID from panel
+     * @param email     client email for SS. UUID For VLESS
+     * @return {@link Boolean} status
+     */
+    Boolean deleteClient(int inboundId, @NotNull String email) throws UnsuccessfulHttpException;
+
+    /**
      * @param email client email
      * @return {@link ClientTraffics} Statistics on the use of client traffic
      */
     ClientTraffics getClientTraffics(@NotNull String email) throws UnsuccessfulHttpException;
-
 
     /**
      * @param inboundId It`s ID from panel

@@ -83,6 +83,19 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
+    public Boolean deleteClient(int inboundId, @NotNull String email) throws UnsuccessfulHttpException {
+        HttpUrl url = baseUrl.newBuilder()
+                .addPathSegment("panel") //panel/api/inbounds/addClient
+                .addPathSegment("inbound")
+                .addPathSegments(String.valueOf(inboundId))
+                .addPathSegment("delClient")
+                .addPathSegments(email)
+                .build();
+        JSONObject obj = new JSONObject();
+        return post(url, obj, new DefaultResponseTransformer<>(gson, Boolean.class)).isSuccess();
+    }
+
+    @Override
     public ClientTraffics getClientTraffics(@NotNull String email) throws UnsuccessfulHttpException {
         HttpUrl url = baseUrl.newBuilder()
                 .addPathSegment("panel") //panel/api/inbounds/getClientTraffics/{email}

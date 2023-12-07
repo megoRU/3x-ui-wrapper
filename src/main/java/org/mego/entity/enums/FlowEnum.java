@@ -1,9 +1,12 @@
 package org.mego.entity.enums;
 
+import org.jetbrains.annotations.Nullable;
+
 public enum FlowEnum {
 
-    XLTS_RPRX_VESION("xtls-rprx-vision"),
-    XLTS_RPRX_VESION_UPD_443("xtls-rprx-vision-udp443");
+    XLTS_RPRX_VISION("xtls-rprx-vision"),
+    XLTS_RPRX_VISION_UPD_443("xtls-rprx-vision-udp443"),
+    NONE("");
 
     private final String value;
 
@@ -15,6 +18,7 @@ public enum FlowEnum {
         return value;
     }
 
+    @Nullable
     public static FlowEnum find(String value) {
         FlowEnum[] values = FlowEnum.values();
         for (FlowEnum version : values) {

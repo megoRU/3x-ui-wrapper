@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.mego.impl.APIObject;
 
 import java.text.DecimalFormat;
 
@@ -11,7 +12,7 @@ import java.text.DecimalFormat;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientTraffics {
+public class ClientTraffics implements APIObject {
 
     private int id;
     private boolean enable;

@@ -2,15 +2,16 @@ package org.mego.entity.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.mego.entity.enums.FlowEnum;
+import org.mego.impl.I3UXObject;
 
 @Builder
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client {
+public class Client implements I3UXObject {
 
     private String id;
     private FlowEnum flow;

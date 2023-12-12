@@ -4,8 +4,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.mego.entity.api.Client;
 import org.mego.entity.api.ClientTraffics;
-import org.mego.io.UnsuccessfulHttpException;
+import org.mego.entity.exceptions.UnsuccessfulHttpException;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public interface ThreeUIAPI {
@@ -28,7 +29,9 @@ public interface ThreeUIAPI {
      * @param email client email
      * @return {@link ClientTraffics} Statistics on the use of client traffic
      */
-    ClientTraffics getClientTraffics(@NotNull String email) throws UnsuccessfulHttpException;
+    ClientTraffics getClientTraffics(@NotNull String email) throws UnsuccessfulHttpException, IOException;
+
+//    ClientsIDs getOnline() throws UnsuccessfulHttpException;
 
     /**
      * @param inboundId It`s ID from panel

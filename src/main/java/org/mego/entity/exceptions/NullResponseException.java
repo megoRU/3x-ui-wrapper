@@ -1,4 +1,4 @@
-package org.mego.io;
+package org.mego.entity.exceptions;
 
 public class NullResponseException extends Exception {
 

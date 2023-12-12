@@ -1,7 +1,9 @@
 package org.mego.entity.enums;
 
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
+@Getter
 public enum FlowEnum {
 
     XLTS_RPRX_VISION("xtls-rprx-vision"),
@@ -12,10 +14,6 @@ public enum FlowEnum {
 
     FlowEnum(String value) {
         this.value = value;
-    }
-
-    public String getValue() {
-        return value;
     }
 
     @Nullable

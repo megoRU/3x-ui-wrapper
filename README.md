@@ -21,6 +21,12 @@ https://jitpack.io/#megoRU/3x-ui-wrapper
    <version>1.6</version>
 </dependency>
 ```
+## Preparing to upgrade 1.6 from previous versions
+
+```html
+inboundId now you need to specify it in the Client. 
+If not specified, an exception will be thrown
+```
 
 ## Examples
 

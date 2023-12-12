@@ -13,10 +13,10 @@ import java.util.Objects;
 public interface ThreeUIAPI {
 
     /**
-     * @param client    new client settings
+     * @param client new client settings
      * @return {@link Boolean} status
      */
-    Boolean addClient( @NotNull Client client) throws UnsuccessfulHttpException, IOException;
+    Boolean addClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param inboundId It`s ID from panel
@@ -31,10 +31,13 @@ public interface ThreeUIAPI {
      */
     ClientTraffics getClientTraffics(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @return {@link List<String>} List of online emails
+     */
     List<String> getOnline() throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @param client    updated customer data
+     * @param client updated customer data
      * @return {@link Boolean} status
      * <p><br>
      * Some data is better not to change. Since I myself have not yet understood what this can lead to.

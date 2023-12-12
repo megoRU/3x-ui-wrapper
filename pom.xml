@@ -6,7 +6,7 @@
 
     <groupId>org.megoru</groupId>
     <artifactId>wrapper-3x-ui</artifactId>
-    <version>1.5.2</version>
+    <version>1.6</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -16,6 +16,13 @@
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -43,13 +50,6 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>5.0.0-alpha.11</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>5.3-alpha1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.json/json -->

@@ -3,17 +3,21 @@ package org.mego.entity.api;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import org.json.JSONObject;
 import org.mego.entity.enums.FlowEnum;
-import org.mego.impl.I3UXObject;
-import org.mego.impl.I3UXRequestData;
+import org.mego.impl.APIObject;
+import org.mego.impl.APIRequestData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Getter
-@AllArgsConstructor
-public class Client implements I3UXObject, I3UXRequestData {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class Client implements APIObject, APIRequestData {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
     private String id;
     private FlowEnum flow;
@@ -27,7 +31,7 @@ public class Client implements I3UXObject, I3UXRequestData {
     private String subId;
     private String method;
     @JsonIgnore
-    private int inboundId = -1;
+    private int inboundId;
 
     public String getFlow() {
         if (flow != null) return flow.getValue();
@@ -46,6 +50,7 @@ public class Client implements I3UXObject, I3UXRequestData {
             obj.put("settings", "{\"clients\":" + clientsJsonString + "}");
 
         } catch (JsonProcessingException e) {
+            LOGGER.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
         return obj.toString();
@@ -127,7 +132,6 @@ public class Client implements I3UXObject, I3UXRequestData {
         }
 
         public Client build() throws IllegalAccessException {
-            // Здесь можно добавить дополнительные проверки перед созданием объекта
             if (inboundId == -1) throw new IllegalAccessException("inboundId cannot be: " + inboundId);
             return new Client(id, flow, password, email, limitIp, totalGB, expiryTime, enable, tgId, subId, method, inboundId);
         }

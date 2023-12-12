@@ -1,19 +1,15 @@
 package org.mego.entity.api.response;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.mego.impl.I3UXObject;
+import lombok.*;
+import org.mego.impl.APIObject;
 
 import java.util.List;
 
-@Builder
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientsOnlineResponse implements I3UXObject {
+public class ClientsOnlineResponse implements APIObject {
 
     @SerializedName("success")
     private boolean success;

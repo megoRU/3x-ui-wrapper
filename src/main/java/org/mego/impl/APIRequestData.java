@@ -1,8 +1,8 @@
 package org.mego.impl;
 
-import org.mego.io.JsonUtil;
+import org.mego.utils.JsonUtil;
 
-public interface I3UXRequestData {
+public interface APIRequestData {
 
     default String toJson() {
         return JsonUtil.toJson(this);

@@ -11,9 +11,10 @@ import org.mego.entity.api.response.ClientResponse;
 import org.mego.entity.api.response.ClientsOnlineResponse;
 import org.mego.entity.api.response.StatusResponse;
 import org.mego.entity.exceptions.UnsuccessfulHttpException;
-import org.mego.io.JsonUtil;
+import org.mego.utils.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -21,11 +22,10 @@ import java.util.Objects;
 
 public class ThreeUIAPIImpl implements ThreeUIAPI {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ThreeUIAPIImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ThreeUIAPIImpl.class);
     private static final OkHttpClient CLIENT = new OkHttpClient();
     private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
 
-    private final HttpUrl baseUrl;
     private final String host;
     private String cookie;
     private final String login;
@@ -37,7 +37,6 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         this.password = password;
         this.host = host;
         this.devMode = devMode;
-        baseUrl = HttpUrl.get(host);
         //Устанавливаем сессию
         setSession();
     }
@@ -73,10 +72,6 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
 
     @Override
     public void setSession() {
-        HttpUrl url = baseUrl.newBuilder()
-                .addPathSegment("login")
-                .build();
-
         JSONObject json = new JSONObject();
         try {
             json.put("username", login);
@@ -87,7 +82,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
 
         try {
             Request request = new Request.Builder()
-                    .url(url.url())
+                    .url(String.format("%s/login", host))
                     .post(RequestBody.create(json.toString(), MEDIA_TYPE_JSON))
                     .build();
             try (Response response = CLIENT.newCall(request).execute()) {
@@ -102,17 +97,17 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         }
     }
 
-    private <T extends I3UXObject> T parseResponse(Class<T> tClass, @NotNull THREEUXRequest threeuxRequest) throws IOException, UnsuccessfulHttpException {
+    private <T extends APIObject> T parseResponse(Class<T> tClass, @NotNull APIRequest apiRequest) throws IOException, UnsuccessfulHttpException {
         Request.Builder requestBuilder = new Request.Builder()
-                .url(threeuxRequest.getUrl())
+                .url(apiRequest.getUrl())
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Cookie", cookie);
 
-        if (threeuxRequest.getRequestMethod() == THREEUXRequest.RequestMethod.GET) {
+        if (apiRequest.getRequestMethod() == APIRequest.RequestMethod.GET) {
             requestBuilder = requestBuilder.get();
-        } else if (threeuxRequest.getRequestMethod() == THREEUXRequest.RequestMethod.POST) {
-            if (threeuxRequest.getData() != null) {
-                requestBuilder.post(RequestBody.create(threeuxRequest.getData().toJson(), MEDIA_TYPE_JSON));
+        } else if (apiRequest.getRequestMethod() == APIRequest.RequestMethod.POST) {
+            if (apiRequest.getData() != null) {
+                requestBuilder.post(RequestBody.create(apiRequest.getData().toJson(), MEDIA_TYPE_JSON));
             } else {
                 requestBuilder.post(RequestBody.create("{}", MEDIA_TYPE_JSON));
             }

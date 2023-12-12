@@ -1,4 +1,4 @@
-package org.mego.io;
+package org.mego.utils;
 
 import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;

@@ -1,7 +1,5 @@
 package org.mego.entity.api.request;
 
-import org.mego.entity.THREEUXRequest;
-
 public class ClientTrafficsRequest extends THREEUXRequest {
 
     public ClientTrafficsRequest(String host, String email) {

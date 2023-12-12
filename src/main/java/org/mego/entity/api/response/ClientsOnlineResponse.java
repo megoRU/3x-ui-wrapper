@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.mego.impl.I3UXObject;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientsOnlinesResponse {
+public class ClientsOnlineResponse implements I3UXObject {
 
     @SerializedName("success")
     private boolean success;
@@ -21,5 +22,5 @@ public class ClientsOnlinesResponse {
     private String message;
 
     @SerializedName("obj")
-    private List<String> objects;
+    private List<String> obj;
 }

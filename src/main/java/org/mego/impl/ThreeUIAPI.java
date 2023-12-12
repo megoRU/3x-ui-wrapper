@@ -7,23 +7,23 @@ import org.mego.entity.api.ClientTraffics;
 import org.mego.entity.exceptions.UnsuccessfulHttpException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 public interface ThreeUIAPI {
 
     /**
-     * @param inboundId It`s ID from panel
      * @param client    new client settings
      * @return {@link Boolean} status
      */
-    Boolean addClient(int inboundId, @NotNull Client client) throws UnsuccessfulHttpException;
+    Boolean addClient( @NotNull Client client) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param inboundId It`s ID from panel
      * @param email     client email for SS. UUID For VLESS
      * @return {@link Boolean} status
      */
-    Boolean deleteClient(int inboundId, @NotNull String email) throws UnsuccessfulHttpException;
+    Boolean deleteClient(int inboundId, @NotNull String email) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param email client email
@@ -31,17 +31,16 @@ public interface ThreeUIAPI {
      */
     ClientTraffics getClientTraffics(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
-//    ClientsIDs getOnline() throws UnsuccessfulHttpException;
+    List<String> getOnline() throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @param inboundId It`s ID from panel
      * @param client    updated customer data
      * @return {@link Boolean} status
      * <p><br>
      * Some data is better not to change. Since I myself have not yet understood what this can lead to.
      * It's best to use this to turn on and off. You can also change the limits.
      */
-    Boolean updateClient(int inboundId, @NotNull Client client) throws UnsuccessfulHttpException;
+    Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
 
     /**
      * Setup new Session

@@ -18,10 +18,10 @@ https://jitpack.io/#megoRU/3x-ui-wrapper
 <dependency>
    <groupId>com.github.megoRU</groupId>
    <artifactId>3x-ui-wrapper</artifactId>
-   <version>1.6</version>
+   <version>1.6.1</version>
 </dependency>
 ```
-## Preparing to upgrade 1.6 from previous versions
+## Preparing to upgrade 1.6.1 from previous versions
 
 ```html
 inboundId now you need to specify it in the Client. 

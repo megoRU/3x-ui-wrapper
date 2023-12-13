@@ -1,6 +1,7 @@
 package org.mego.entity.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
@@ -21,6 +22,7 @@ public class Client implements APIObject, APIRequestData {
 
     private String id;
     private FlowEnum flow;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
     private String email;
     private int limitIp;
@@ -32,6 +34,8 @@ public class Client implements APIObject, APIRequestData {
     private String method;
     @JsonIgnore
     private int inboundId;
+    @JsonIgnore
+    private int reset;
 
     public String getFlow() {
         if (flow != null) return flow.getValue();
@@ -70,6 +74,7 @@ public class Client implements APIObject, APIRequestData {
         private String subId;
         private String method;
         private int inboundId = -1;
+        private int reset = 0;
 
         public Builder id(String id) {
             this.id = id;
@@ -131,9 +136,14 @@ public class Client implements APIObject, APIRequestData {
             return this;
         }
 
+        public Builder reset(int reset) {
+            this.reset = reset;
+            return this;
+        }
+
         public Client build() throws IllegalAccessException {
             if (inboundId == -1) throw new IllegalAccessException("inboundId cannot be: " + inboundId);
-            return new Client(id, flow, password, email, limitIp, totalGB, expiryTime, enable, tgId, subId, method, inboundId);
+            return new Client(id, flow, password, email, limitIp, totalGB, expiryTime, enable, tgId, subId, method, inboundId, reset);
         }
     }
 }

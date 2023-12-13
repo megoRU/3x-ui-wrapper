@@ -127,6 +127,6 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     private void logResponse(String body) {
-        if (devMode) LOGGER.info("Body: {}", body);
+        if (devMode) System.out.printf("Body: %s%n", body);
     }
 }

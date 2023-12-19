@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.mego.entity.api.Client;
 import org.mego.entity.api.ClientTraffics;
+import org.mego.entity.api.Inboard;
 import org.mego.entity.exceptions.UnsuccessfulHttpException;
 
 import java.io.IOException;
@@ -44,6 +45,8 @@ public interface ThreeUIAPI {
      * It's best to use this to turn on and off. You can also change the limits.
      */
     Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
+
+    List<Inboard> getInboards() throws UnsuccessfulHttpException, IOException;
 
     /**
      * Setup new Session

@@ -6,9 +6,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mego.entity.api.Client;
 import org.mego.entity.api.ClientTraffics;
+import org.mego.entity.api.Inboard;
 import org.mego.entity.api.request.*;
 import org.mego.entity.api.response.ClientResponse;
 import org.mego.entity.api.response.ClientsOnlineResponse;
+import org.mego.entity.api.response.InboardResponse;
 import org.mego.entity.api.response.StatusResponse;
 import org.mego.entity.exceptions.UnsuccessfulHttpException;
 import org.mego.utils.JsonUtil;
@@ -70,6 +72,11 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
+    public List<Inboard> getInboards() throws UnsuccessfulHttpException, IOException {
+        return parseResponse(InboardResponse.class, new InboardRequest(host)).getObj();
+    }
+
+    @Override
     public void setSession() {
         JSONObject json = new JSONObject();
         try {
@@ -118,7 +125,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
             if (response.isSuccessful()) {
                 String responseBody = Objects.requireNonNull(response.body()).string();
                 logResponse(responseBody);
-                if (!response.isSuccessful()) throw new UnsuccessfulHttpException(response.code(), response.message());
+                if (!response.isSuccessful()) throw new UnsuccessfulHttpException(response.code(), response.body().string());
                 return JsonUtil.fromJson(responseBody, tClass);
             } else {
                 throw new UnsuccessfulHttpException(response.code(), response.message());

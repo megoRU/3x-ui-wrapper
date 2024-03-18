@@ -2,7 +2,6 @@ package org.mego.entity.api.response;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.mego.entity.api.ClientTraffics;

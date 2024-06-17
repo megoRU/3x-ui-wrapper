@@ -21,6 +21,7 @@ public class ClientTraffics implements APIObject {
     private long down;
     private long expiryTime;
     private long total;
+    private long reset;
 
     /**
      * @return {@link String} Returns how many gigabytes the client downloaded in 2 decimal places. For example 1.94

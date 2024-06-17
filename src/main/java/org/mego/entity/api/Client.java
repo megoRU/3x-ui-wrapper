@@ -7,13 +7,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
+import org.mego.entity.api.request.ClientCreateRequest;
 import org.mego.entity.enums.FlowEnum;
 import org.mego.impl.APIObject;
 import org.mego.impl.APIRequestData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Use only for create {@link ClientCreateRequest}
+ */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Client implements APIObject, APIRequestData {
@@ -23,11 +28,12 @@ public class Client implements APIObject, APIRequestData {
     private String id;
     private FlowEnum flow;
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Nullable
     private String password;
     private String email;
     private int limitIp;
-    private int totalGB;
-    private int expiryTime;
+    private long totalGB;
+    private long expiryTime;
     private boolean enable;
     private String tgId;
     private String subId;
@@ -36,11 +42,6 @@ public class Client implements APIObject, APIRequestData {
     private int inboundId;
     @JsonIgnore
     private int reset;
-
-    public String getFlow() {
-        if (flow != null) return flow.getValue();
-        else return null;
-    }
 
     @Override
     public String toJson() {
@@ -67,8 +68,8 @@ public class Client implements APIObject, APIRequestData {
         private String password;
         private String email;
         private int limitIp;
-        private int totalGB;
-        private int expiryTime;
+        private long totalGB;
+        private long expiryTime;
         private boolean enable;
         private String tgId;
         private String subId;

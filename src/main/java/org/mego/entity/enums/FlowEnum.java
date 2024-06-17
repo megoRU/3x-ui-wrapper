@@ -1,7 +1,6 @@
 package org.mego.entity.enums;
 
 import lombok.Getter;
-import org.jetbrains.annotations.Nullable;
 
 @Getter
 public enum FlowEnum {
@@ -16,8 +15,8 @@ public enum FlowEnum {
         this.value = value;
     }
 
-    @Nullable
     public static FlowEnum find(String value) {
+        if (value == null || value.isEmpty()) return FlowEnum.NONE;
         FlowEnum[] values = FlowEnum.values();
         for (FlowEnum version : values) {
             String localValue = version.getValue();

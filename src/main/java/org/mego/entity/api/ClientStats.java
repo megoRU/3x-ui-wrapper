@@ -23,5 +23,4 @@ public class ClientStats {
     private int inboundId;
     private int reset;
     private long total;
-
 }

@@ -1,5 +1,6 @@
 package org.mego.entity.api;
 
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,8 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Inboard implements APIObject {
 
-    private List<ClientStats> clientStats;
+    private List<ClientTraffics> clientStats;
     private long down;
+    private String settings;
     private long up;
     private boolean enable;
     private long expiryTime;
@@ -26,4 +28,9 @@ public class Inboard implements APIObject {
     private String remark;
     private String tag;
     private long total;
+
+    public Settings getSettings() {
+        Gson gson = new Gson();
+        return gson.fromJson(settings, Settings.class);
+    }
 }

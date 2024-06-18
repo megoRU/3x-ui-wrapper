@@ -6,7 +6,7 @@
 
     <groupId>org.megoru</groupId>
     <artifactId>wrapper-3x-ui</artifactId>
-    <version>1.6.5</version>
+    <version>1.6.8</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

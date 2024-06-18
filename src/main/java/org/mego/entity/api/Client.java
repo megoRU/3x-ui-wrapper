@@ -43,6 +43,14 @@ public class Client implements APIObject, APIRequestData {
     @JsonIgnore
     private int reset;
 
+    /**
+     * Не удалять
+     */
+    public String getFlow() {
+        if (flow != null) return flow.getValue();
+        else return null;
+    }
+
     @Override
     public String toJson() {
         Client[] clients = new Client[1];

@@ -24,6 +24,7 @@ public class Inboard implements APIObject {
     private long id;
     private String listen;
     private long port;
+    private String streamSettings;
     private String protocol;
     private String remark;
     private String tag;
@@ -32,5 +33,10 @@ public class Inboard implements APIObject {
     public Settings getSettings() {
         Gson gson = new Gson();
         return gson.fromJson(settings, Settings.class);
+    }
+
+    public StreamSettings getStreamSettings() {
+        Gson gson = new Gson();
+        return gson.fromJson(streamSettings, StreamSettings.class);
     }
 }

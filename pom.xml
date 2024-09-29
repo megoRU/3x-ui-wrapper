@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.megoru</groupId>
-    <artifactId>wrapper-3x-ui</artifactId>
+    <groupId>org.threexui</groupId>
+    <artifactId>3x-ui-wrapper</artifactId>
     <version>1.7.5</version>
 
     <properties>

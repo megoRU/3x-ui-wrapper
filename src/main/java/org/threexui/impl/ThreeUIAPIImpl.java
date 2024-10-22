@@ -4,6 +4,8 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.threexui.entity.api.Client;
 import org.threexui.entity.api.ClientTraffics;
 import org.threexui.entity.api.Inboard;
@@ -14,8 +16,6 @@ import org.threexui.entity.api.response.InboardResponse;
 import org.threexui.entity.api.response.StatusResponse;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 import org.threexui.utils.JsonUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,7 +33,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     private final String password;
     private final boolean devMode;
 
-    protected ThreeUIAPIImpl(String login, String password, boolean devMode, String host) {
+    protected ThreeUIAPIImpl(String login, String password, boolean devMode, String host) throws UnsuccessfulHttpException, IOException {
         this.login = login;
         this.password = password;
         this.host = host;
@@ -77,7 +77,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public void setSession() {
+    public void setSession() throws IOException, UnsuccessfulHttpException {
         JSONObject json = new JSONObject();
         try {
             json.put("username", login);
@@ -86,20 +86,16 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
             LOGGER.error("setSession: ", e);
         }
 
-        try {
-            Request request = new Request.Builder()
-                    .url(String.format("%s/login", host))
-                    .post(RequestBody.create(json.toString(), MEDIA_TYPE_JSON))
-                    .build();
-            try (Response response = CLIENT.newCall(request).execute()) {
-                if (response.isSuccessful()) {
-                    cookie = response.header("Set-Cookie");
-                } else {
-                    throw new UnsuccessfulHttpException(response.code(), response.message());
-                }
+        Request request = new Request.Builder()
+                .url(String.format("%s/login", host))
+                .post(RequestBody.create(json.toString(), MEDIA_TYPE_JSON))
+                .build();
+        try (Response response = CLIENT.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                cookie = response.header("Set-Cookie");
+            } else {
+                throw new UnsuccessfulHttpException(response.code(), response.message());
             }
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -125,7 +121,8 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
             if (response.isSuccessful()) {
                 String responseBody = Objects.requireNonNull(response.body()).string();
                 logResponse(responseBody);
-                if (!response.isSuccessful()) throw new UnsuccessfulHttpException(response.code(), response.body().string());
+                if (!response.isSuccessful())
+                    throw new UnsuccessfulHttpException(response.code(), response.body().string());
                 return JsonUtil.fromJson(responseBody, tClass);
             } else {
                 throw new UnsuccessfulHttpException(response.code(), response.message());

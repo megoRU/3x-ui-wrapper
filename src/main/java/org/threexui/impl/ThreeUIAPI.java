@@ -51,7 +51,7 @@ public interface ThreeUIAPI {
     /**
      * Setup new Session
      */
-    void setSession() throws UnsuccessfulHttpException;
+    void setSession() throws UnsuccessfulHttpException, IOException;
 
     class Builder {
 
@@ -103,7 +103,7 @@ public interface ThreeUIAPI {
         /**
          * @throws IllegalArgumentException if some fields null
          */
-        public ThreeUIAPI build() {
+        public ThreeUIAPI build() throws UnsuccessfulHttpException, IOException {
             if (login == null)
                 throw new IllegalArgumentException("login cannot be null!");
             else if (password == null)

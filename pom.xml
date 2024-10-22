@@ -6,7 +6,7 @@
 
     <groupId>org.threexui</groupId>
     <artifactId>3x-ui-wrapper</artifactId>
-    <version>1.7.5</version>
+    <version>1.7.6</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>25.0.0</version>
+            <version>26.0.1</version>
         </dependency>
     </dependencies>
 

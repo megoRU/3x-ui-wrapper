@@ -18,7 +18,7 @@ https://jitpack.io/#megoRU/3x-ui-wrapper
 <dependency>
    <groupId>com.github.megoRU</groupId>
    <artifactId>3x-ui-wrapper</artifactId>
-   <version>1.7.0</version>
+   <version>1.7.7</version>
 </dependency>
 ```
 ## Preparing to upgrade 1.6.1 from previous versions

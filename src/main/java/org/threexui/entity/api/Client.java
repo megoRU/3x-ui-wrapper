@@ -110,12 +110,12 @@ public class Client implements APIObject, APIRequestData {
             return this;
         }
 
-        public Builder totalGB(int totalGB) {
+        public Builder totalGB(long totalGB) {
             this.totalGB = totalGB;
             return this;
         }
 
-        public Builder expiryTime(int expiryTime) {
+        public Builder expiryTime(long expiryTime) {
             this.expiryTime = expiryTime;
             return this;
         }

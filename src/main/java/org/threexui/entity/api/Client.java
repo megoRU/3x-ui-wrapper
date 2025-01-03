@@ -9,12 +9,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.threexui.entity.api.request.ClientCreateRequest;
 import org.threexui.entity.enums.FlowEnum;
 import org.threexui.impl.APIObject;
 import org.threexui.impl.APIRequestData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Use only for create {@link ClientCreateRequest}
@@ -31,6 +31,7 @@ public class Client implements APIObject, APIRequestData {
     @Nullable
     private String password;
     private String email;
+    private String comment;
     private int limitIp;
     private long totalGB;
     private long expiryTime;
@@ -76,6 +77,7 @@ public class Client implements APIObject, APIRequestData {
         private String password;
         private String email;
         private int limitIp;
+        private String comment;
         private long totalGB;
         private long expiryTime;
         private boolean enable;
@@ -92,6 +94,11 @@ public class Client implements APIObject, APIRequestData {
 
         public Builder flow(FlowEnum flow) {
             this.flow = flow;
+            return this;
+        }
+
+        public Builder comment(String comment) {
+            this.comment = comment;
             return this;
         }
 
@@ -152,7 +159,7 @@ public class Client implements APIObject, APIRequestData {
 
         public Client build() throws IllegalAccessException {
             if (inboundId == -1) throw new IllegalAccessException("inboundId cannot be: " + inboundId);
-            return new Client(id, flow, password, email, limitIp, totalGB, expiryTime, enable, tgId, subId, method, inboundId, reset);
+            return new Client(id, flow, password, email, comment, limitIp, totalGB, expiryTime, enable, tgId, subId, method, inboundId, reset);
         }
     }
 }

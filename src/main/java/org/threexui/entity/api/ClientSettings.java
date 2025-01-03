@@ -17,6 +17,7 @@ public class ClientSettings {
     private String email;
     private boolean enable;
     private long expiryTime;
+    private String comment;
     private String flow;
     private String id;
     private int limitIp;

@@ -10,14 +10,11 @@ import org.threexui.entity.api.Client;
 import org.threexui.entity.api.ClientTraffics;
 import org.threexui.entity.api.Inboard;
 import org.threexui.entity.api.request.*;
-import org.threexui.entity.api.response.ClientResponse;
-import org.threexui.entity.api.response.ClientsOnlineResponse;
-import org.threexui.entity.api.response.InboardResponse;
-import org.threexui.entity.api.response.StatusResponse;
+import org.threexui.entity.api.response.*;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 import org.threexui.utils.JsonUtil;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,6 +43,12 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     public Boolean addClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException {
         StatusResponse createClient = parseResponse(StatusResponse.class, new ClientCreateRequest(host, client));
         return createClient.isSuccess();
+    }
+
+    @Override
+    public File getBackUpFile() throws UnsuccessfulHttpException, IOException {
+        BackupResponse backupResponse = parseFileResponse(new Backup(host));
+        return backupResponse.getFile();
     }
 
     @Override
@@ -99,6 +102,34 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         }
     }
 
+    private BackupResponse parseFileResponse(@NotNull APIRequest apiRequest) throws IOException, UnsuccessfulHttpException {
+        Request.Builder requestBuilder = new Request.Builder()
+                .url(apiRequest.getUrl())
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Cookie", cookie);
+
+        if (apiRequest.getRequestMethod() == APIRequest.RequestMethod.GET) {
+            requestBuilder = requestBuilder.get();
+        }
+
+        Request request = requestBuilder.build();
+
+        try (Response response = CLIENT.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                ResponseBody body = response.body();
+                InputStream inputStream = body.byteStream();
+
+                File outputFile = new File("x-ui.db");
+                try (OutputStream outputStream = new FileOutputStream(outputFile)) {
+                    inputStream.transferTo(outputStream);
+                }
+                return new BackupResponse(outputFile);
+            } else {
+                throw new UnsuccessfulHttpException(response.code(), response.message());
+            }
+        }
+    }
+
     private <T extends APIObject> T parseResponse(Class<T> tClass, @NotNull APIRequest apiRequest) throws IOException, UnsuccessfulHttpException {
         Request.Builder requestBuilder = new Request.Builder()
                 .url(apiRequest.getUrl())
@@ -121,8 +152,6 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
             if (response.isSuccessful()) {
                 String responseBody = Objects.requireNonNull(response.body()).string();
                 logResponse(responseBody);
-                if (!response.isSuccessful())
-                    throw new UnsuccessfulHttpException(response.code(), response.body().string());
                 return JsonUtil.fromJson(responseBody, tClass);
             } else {
                 throw new UnsuccessfulHttpException(response.code(), response.message());

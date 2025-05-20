@@ -7,6 +7,7 @@ import org.threexui.entity.api.ClientTraffics;
 import org.threexui.entity.api.Inboard;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,11 @@ public interface ThreeUIAPI {
      * @return {@link Boolean} status
      */
     Boolean addClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
+
+    /**
+     * @return {@link File} file backup
+     */
+    File getBackUpFile() throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param inboundId It`s ID from panel

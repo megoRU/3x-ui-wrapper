@@ -1,13 +1,17 @@
 # 3x-ui-wrapper
 
-An API wrapper for [3x-ui-wrapper](https://github.com/MHSanaei/3x-ui) written in Java by @megoRU
+[![JitPack](https://jitpack.io/v/megoRU/3x-ui-wrapper.svg)](https://jitpack.io/#megoRU/3x-ui-wrapper)
 
-### Maven
+Java API wrapper for [3x-ui](https://github.com/MHSanaei/3x-ui), developed by [@megoRU](https://github.com/megoRU).
+Supports full interaction with the 3x-ui panel via HTTP API.
 
-https://jitpack.io/#megoRU/3x-ui-wrapper
+---
+
+## 📦 Installation (Maven)
+
+Add JitPack repository and dependency:
 
 ```xml
-
 <repositories>
     <repository>
         <id>jitpack.io</id>
@@ -16,54 +20,57 @@ https://jitpack.io/#megoRU/3x-ui-wrapper
 </repositories>
 
 <dependency>
-   <groupId>com.github.megoRU</groupId>
-   <artifactId>3x-ui-wrapper</artifactId>
-   <version>1.9.0</version>
+    <groupId>com.github.megoRU</groupId>
+    <artifactId>3x-ui-wrapper</artifactId>
+    <version>1.9.0</version>
 </dependency>
 ```
 
-## Examples
+---
 
-### Delete config
+## 🚀 Examples
+
+### ➖ Delete config
 
 ```java
-public class Main {
-    public static void main(String[] args) {
-        ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder().enableDevMode()
-                .setHost("http://45.15.158.18:2053")
-                .setLogin("admin")
-                .setPassword("admin")
-                .enableDevMode()
-                .build();
+ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
+        .setHost("http://your-host:port")
+        .setLogin("admin")
+        .setPassword("admin")
+        .enableDevMode()
+        .build();
 
-        Boolean b = threeUIAPI.deleteClient(1, "af444bd8-9b9b-46c4-9fcd-971153852d89"); //or email 432fdgd
-        System.out.println(b);
-    }
-}
+boolean success = threeUIAPI.deleteClient(1, "uuid-or-email");
+System.out.println("Deleted: " + success);
 ```
 
-### Create config
+### ➕ Create config
+
 ```java
-public class Main {
-    public static void main(String[] args) {
-        ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder().enableDevMode()
-                .setHost("http://45.15.158.18:2053")
-                .setLogin("admin")
-                .setPassword("admin")
-                .enableDevMode()
-                .build();
+ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
+        .setHost("http://your-host:port")
+        .setLogin("admin")
+        .setPassword("admin")
+        .enableDevMode()
+        .build();
 
-        Client client = new Client.Builder()
-                .email("testuser123")
-                .method("aes-256-gcm")
-                .enable(true)
-                .subId("fdsfs432423")
-                .inboundId(1)
-                .password("APC8He0NRDfQp40BaLujKNmSANoOaJovQeWDVdsf")
-                .build();
+Client client = new Client.Builder()
+        .email("testuser123")
+        .method("aes-256-gcm")
+        .enable(true)
+        .subId("your-sub-id")
+        .inboundId(1)
+        .password("secure-password")
+        .build();
 
-        Boolean status = threeUIAPI.addClient(client);
-        System.out.println("status: " + status); //status:  true
-    }
-}
+boolean success = threeUIAPI.addClient(client);
+System.out.println("Created: " + success);
 ```
+
+---
+
+## 📄 License
+
+This wrapper is distributed under the MIT License.
+
+---

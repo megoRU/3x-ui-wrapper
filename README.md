@@ -72,5 +72,3 @@ System.out.println("Created: " + success);
 ## 📄 License
 
 This wrapper is distributed under the MIT License.
-
----

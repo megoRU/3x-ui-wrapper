@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.threexui.entity.api.Client;
 import org.threexui.entity.api.ClientTraffics;
 import org.threexui.entity.api.Inboard;
+import org.threexui.entity.api.StatusPanel;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 
 import java.io.File;
@@ -51,6 +52,11 @@ public interface ThreeUIAPI {
      * It's best to use this to turn on and off. You can also change the limits.
      */
     Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
+
+    /**
+     * @return {@link StatusPanel} Status panel
+     */
+    StatusPanel getStatus() throws UnsuccessfulHttpException, IOException;
 
     List<Inboard> getInboards() throws UnsuccessfulHttpException, IOException;
 

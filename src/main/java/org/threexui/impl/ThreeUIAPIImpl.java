@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.threexui.entity.api.Client;
 import org.threexui.entity.api.ClientTraffics;
 import org.threexui.entity.api.Inboard;
+import org.threexui.entity.api.StatusPanel;
 import org.threexui.entity.api.request.*;
 import org.threexui.entity.api.response.*;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
@@ -75,6 +76,12 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
+    public StatusPanel getStatus() throws UnsuccessfulHttpException, IOException {
+        StatusPanelResponse statusPanelResponse = parseResponse(StatusPanelResponse.class, new StatusRequest(host));
+        return statusPanelResponse.getObj();
+    }
+
+    @Override
     public List<Inboard> getInboards() throws UnsuccessfulHttpException, IOException {
         return parseResponse(InboardResponse.class, new InboardRequest(host)).getObj();
     }
@@ -95,6 +102,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
                 .build();
         try (Response response = CLIENT.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                System.out.println(response.body().string());
                 cookie = response.header("Set-Cookie");
             } else {
                 throw new UnsuccessfulHttpException(response.code(), response.message());

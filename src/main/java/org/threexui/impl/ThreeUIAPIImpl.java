@@ -102,7 +102,6 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
                 .build();
         try (Response response = CLIENT.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                System.out.println(response.body().string());
                 cookie = response.header("Set-Cookie");
             } else {
                 throw new UnsuccessfulHttpException(response.code(), response.message());

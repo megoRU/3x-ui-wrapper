@@ -28,16 +28,22 @@ public interface ThreeUIAPI {
 
     /**
      * @param inboundId It`s ID from panel
-     * @param email     client email for SS. UUID For VLESS
+     * @param clientId
+     * client.id → VMESS / VLESS
+     * client.password → TROJAN
+     * client.email → Shadowsocks
      * @return {@link Boolean} status
      */
-    Boolean deleteClient(int inboundId, @NotNull String email) throws UnsuccessfulHttpException, IOException;
+    Boolean deleteClient(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @param email client email
+     * @param clientId
+     * client.id → VMESS / VLESS
+     * client.password → TROJAN
+     * client.email → Shadowsocks
      * @return {@link ClientTraffics} Statistics on the use of client traffic
      */
-    ClientTraffics getClientTraffics(@NotNull String email) throws UnsuccessfulHttpException, IOException;
+    ClientTraffics getClientTraffics(@NotNull String clientId) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @return {@link List<String>} List of online emails

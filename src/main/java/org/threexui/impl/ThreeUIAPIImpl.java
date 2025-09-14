@@ -53,8 +53,14 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public Boolean deleteClient(int inboundId, @NotNull String email) throws UnsuccessfulHttpException, IOException {
-        StatusResponse deleteClientRequest = parseResponse(StatusResponse.class, new DeleteClientRequest(host, inboundId, email));
+    public Boolean deleteClient(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException {
+        StatusResponse deleteClientRequest = parseResponse(StatusResponse.class, new DeleteClientRequest(host, inboundId, clientId));
+        return deleteClientRequest.isSuccess();
+    }
+
+    @Override
+    public Boolean deleteClientByEmail(int inboundId, @NotNull String email) throws UnsuccessfulHttpException, IOException {
+        StatusResponse deleteClientRequest = parseResponse(StatusResponse.class, new DeleteClientByEmailRequest(host, inboundId, email));
         return deleteClientRequest.isSuccess();
     }
 

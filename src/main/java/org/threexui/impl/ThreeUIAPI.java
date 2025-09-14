@@ -37,6 +37,13 @@ public interface ThreeUIAPI {
     Boolean deleteClient(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException;
 
     /**
+     * @param inboundId It`s ID from panel
+     * @param email email
+     * @return {@link Boolean} status
+     */
+    Boolean deleteClientByEmail(int inboundId, @NotNull String email) throws UnsuccessfulHttpException, IOException;
+
+    /**
      * @param clientId
      * client.id → VMESS / VLESS
      * client.password → TROJAN

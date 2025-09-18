@@ -18,6 +18,9 @@ public class ClientTraffics implements APIObject {
     private boolean enable;
     private String email;
     private long up;
+    private int inboundId;
+    private String subId;
+    private long lastOnline;
     private long down;
     private long expiryTime;
     private long total;

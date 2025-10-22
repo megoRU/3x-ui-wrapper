@@ -77,8 +77,20 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
 
     @Override
     public Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException {
-        StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, client));
-        return updateClient.isSuccess();
+        String password = client.getPassword();
+        String clientId = client.getId();
+
+        if (clientId == null) {
+            if (password != null) {
+                StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, client, password));
+                return updateClient.isSuccess();
+            } else {
+                throw new IllegalArgumentException("Password or clientId null");
+            }
+        } else {
+            StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, client, clientId));
+            return updateClient.isSuccess();
+        }
     }
 
     @Override

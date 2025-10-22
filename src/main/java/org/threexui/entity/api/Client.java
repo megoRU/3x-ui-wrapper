@@ -42,6 +42,8 @@ public class Client implements APIObject, APIRequestData {
     private boolean enable;
     private String tgId;
     private String subId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Nullable
     private String method;
     @JsonIgnore
     private int inboundId;

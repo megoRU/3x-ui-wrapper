@@ -25,7 +25,11 @@ public class Client implements APIObject, APIRequestData {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Nullable
     private String id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Nullable
     private FlowEnum flow;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Nullable
@@ -41,7 +45,7 @@ public class Client implements APIObject, APIRequestData {
     private String method;
     @JsonIgnore
     private int inboundId;
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int reset;
 
     /**

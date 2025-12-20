@@ -22,6 +22,16 @@ public interface ThreeUIAPI {
     Boolean addClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
 
     /**
+     * @param inboundId It`s ID from panel
+     * @param clientId
+     * client.id → VMESS / VLESS
+     * client.password → TROJAN
+     * client.email → Shadowsocks
+     * @return {@link Boolean} status
+     */
+    Boolean resetClientTraffic(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException;
+
+    /**
      * @return {@link File} file backup
      */
     File getBackUpFile() throws UnsuccessfulHttpException, IOException;

@@ -47,6 +47,14 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
+    public Boolean resetClientTraffic(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException {
+
+
+        StatusResponse deleteClientRequest = parseResponse(StatusResponse.class, new ResetClientTrafficRequest(host, inboundId, clientId));
+        return deleteClientRequest.isSuccess();
+    }
+
+    @Override
     public File getBackUpFile() throws UnsuccessfulHttpException, IOException {
         BackupResponse backupResponse = parseFileResponse(new Backup(host));
         return backupResponse.getFile();

@@ -23,7 +23,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreeUIAPIImpl.class);
     private static final OkHttpClient CLIENT = new OkHttpClient();
-    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final MediaType MEDIA_TYPE_JSON = MediaType.get("application/json");
 
     private final String host;
     private String cookie;
@@ -38,6 +38,18 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         this.devMode = devMode;
         //Устанавливаем сессию
         setSession();
+    }
+
+    private void logInfo(String message, Object... args) {
+        if (devMode) LOGGER.info(message, args);
+    }
+
+    private void logDebug(String message, Object... args) {
+        if (devMode) LOGGER.debug(message, args);
+    }
+
+    private void logError(String message, Object... args) {
+        LOGGER.error(message, args);
     }
 
     @Override
@@ -115,78 +127,143 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     @Override
     public void setSession() throws IOException, UnsuccessfulHttpException {
         JSONObject json = new JSONObject();
+
         try {
             json.put("username", login);
             json.put("password", password);
         } catch (JSONException e) {
-            LOGGER.error("setSession: ", e);
+            logError("Failed to build login JSON payload", e);
         }
 
+        String url = String.format("%s/login", host);
+
+        logInfo("Creating session. host={} login={}", host, login);
+
         Request request = new Request.Builder()
-                .url(String.format("%s/login", host))
+                .url(url)
                 .post(RequestBody.create(json.toString(), MEDIA_TYPE_JSON))
                 .build();
+
+        long start = System.currentTimeMillis();
+
         try (Response response = CLIENT.newCall(request).execute()) {
+
+            long duration = System.currentTimeMillis() - start;
+
             if (response.isSuccessful()) {
+
                 cookie = response.header("Set-Cookie");
+
+                if (cookie == null) {
+                    logError("Login success but cookie missing. url={} durationMs={}", url, duration);
+                } else {
+                    logInfo("Session created successfully. url={} durationMs={}", url, duration);
+                }
             } else {
+                logError("Login request failed. url={} status={} message={} durationMs={}",
+                        url,
+                        response.code(),
+                        response.message(),
+                        duration);
+
                 throw new UnsuccessfulHttpException(response.code(), response.message());
             }
         }
     }
 
     private BackupResponse parseFileResponse(@NotNull APIRequest apiRequest) throws IOException, UnsuccessfulHttpException {
+        String url = apiRequest.getUrl();
+
+        logInfo("Downloading backup. url={}", url);
+
         Request.Builder requestBuilder = new Request.Builder()
-                .url(apiRequest.getUrl())
+                .url(url)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Cookie", cookie);
 
         if (apiRequest.getRequestMethod() == APIRequest.RequestMethod.GET) {
-            requestBuilder = requestBuilder.get();
+            requestBuilder.get();
         }
 
         Request request = requestBuilder.build();
+        long start = System.currentTimeMillis();
 
         try (Response response = CLIENT.newCall(request).execute()) {
+            long duration = System.currentTimeMillis() - start;
+
             if (response.isSuccessful()) {
                 ResponseBody body = response.body();
-                InputStream inputStream = body.byteStream();
 
                 File outputFile = new File("x-ui.db");
-                try (OutputStream outputStream = new FileOutputStream(outputFile)) {
+
+                try (InputStream inputStream = body.byteStream();
+                     OutputStream outputStream = new FileOutputStream(outputFile)) {
+
                     inputStream.transferTo(outputStream);
                 }
+
+                logInfo("Backup downloaded. file={} sizeBytes={} durationMs={}",
+                        outputFile.getAbsolutePath(),
+                        outputFile.length(),
+                        duration);
+
                 return new BackupResponse(outputFile);
             } else {
+                logError("Backup request failed. url={} status={} message={} durationMs={}",
+                        url,
+                        response.code(),
+                        response.message(),
+                        duration);
+
                 throw new UnsuccessfulHttpException(response.code(), response.message());
             }
         }
     }
 
     private <T extends APIObject> T parseResponse(Class<T> tClass, @NotNull APIRequest apiRequest) throws IOException, UnsuccessfulHttpException {
+        String url = apiRequest.getUrl();
+        APIRequest.RequestMethod method = apiRequest.getRequestMethod();
+
+        String payload = apiRequest.getData() != null ? apiRequest.getData().toJson() : "{}";
+        logDebug("API request start. method={} url={} payload={}", method, url, payload);
+
         Request.Builder requestBuilder = new Request.Builder()
-                .url(apiRequest.getUrl())
+                .url(url)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Cookie", cookie);
 
-        if (apiRequest.getRequestMethod() == APIRequest.RequestMethod.GET) {
-            requestBuilder = requestBuilder.get();
-        } else if (apiRequest.getRequestMethod() == APIRequest.RequestMethod.POST) {
-            if (apiRequest.getData() != null) {
-                requestBuilder.post(RequestBody.create(apiRequest.getData().toJson(), MEDIA_TYPE_JSON));
-            } else {
-                requestBuilder.post(RequestBody.create("{}", MEDIA_TYPE_JSON));
-            }
+        if (method == APIRequest.RequestMethod.GET) {
+            requestBuilder.get();
+        } else if (method == APIRequest.RequestMethod.POST) {
+            requestBuilder.post(RequestBody.create(payload, MEDIA_TYPE_JSON));
         }
 
         Request request = requestBuilder.build();
+        long start = System.currentTimeMillis();
 
         try (Response response = CLIENT.newCall(request).execute()) {
+            long duration = System.currentTimeMillis() - start;
+
             if (response.isSuccessful()) {
                 String responseBody = Objects.requireNonNull(response.body()).string();
-                logResponse(responseBody);
+
+                logInfo("API request success. method={} url={} status={} durationMs={}",
+                        method,
+                        url,
+                        response.code(),
+                        duration);
+
+                logDebug("API response body. url={} body={}", url, responseBody);
+
                 return JsonUtil.fromJson(responseBody, tClass);
             } else {
+                logError("API request failed. method={} url={} status={} message={} durationMs={}",
+                        method,
+                        url,
+                        response.code(),
+                        response.message(),
+                        duration);
+
                 throw new UnsuccessfulHttpException(response.code(), response.message());
             }
         }

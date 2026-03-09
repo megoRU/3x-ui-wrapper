@@ -22,7 +22,7 @@ Add JitPack repository and dependency:
 <dependency>
     <groupId>com.github.megoRU</groupId>
     <artifactId>3x-ui-wrapper</artifactId>
-    <version>2.0.8</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 

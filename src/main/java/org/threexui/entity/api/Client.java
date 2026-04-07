@@ -2,8 +2,6 @@ package org.threexui.entity.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +13,7 @@ import org.threexui.entity.api.request.ClientCreateRequest;
 import org.threexui.entity.enums.FlowEnum;
 import org.threexui.impl.APIObject;
 import org.threexui.impl.APIRequestData;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Use only for create {@link ClientCreateRequest}
@@ -63,16 +62,12 @@ public class Client implements APIObject, APIRequestData {
         Client[] clients = new Client[1];
         clients[0] = this;
         JSONObject obj = new JSONObject();
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String clientsJsonString = objectMapper.writeValueAsString(clients);
-            obj.put("id", this.inboundId);
-            obj.put("settings", "{\"clients\":" + clientsJsonString + "}");
 
-        } catch (JsonProcessingException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        String clientsJsonString = objectMapper.writeValueAsString(clients);
+        obj.put("id", this.inboundId);
+        obj.put("settings", "{\"clients\":" + clientsJsonString + "}");
+
         return obj.toString();
     }
 

@@ -6,11 +6,9 @@
 
     <groupId>org.threexui</groupId>
     <artifactId>3x-ui-wrapper</artifactId>
-    <version>2.1.4</version>
+    <version>2.1.5</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
@@ -103,9 +101,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
+                <version>3.14.1</version>
                 <configuration>
-                    <source>21</source>
+                    <release>21</release>
                 </configuration>
             </plugin>
         </plugins>

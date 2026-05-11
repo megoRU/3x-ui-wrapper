@@ -2,8 +2,6 @@ package org.threexui.impl;
 
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threexui.entity.api.Client;
@@ -16,8 +14,12 @@ import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 import org.threexui.utils.JsonUtil;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ThreeUIAPIImpl implements ThreeUIAPI {
 
@@ -29,13 +31,15 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     private String cookie;
     private final String login;
     private final String password;
+    private final String twoFactorCode;
     private final boolean devMode;
 
-    protected ThreeUIAPIImpl(String login, String password, boolean devMode, String host) throws UnsuccessfulHttpException, IOException {
+    protected ThreeUIAPIImpl(String login, String password, boolean devMode, String host, String twoFactorCode) throws UnsuccessfulHttpException, IOException {
         this.login = login;
         this.password = password;
         this.host = host;
         this.devMode = devMode;
+        this.twoFactorCode = twoFactorCode;
         //Устанавливаем сессию
         setSession();
     }
@@ -124,24 +128,85 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         return parseResponse(InboardResponse.class, new InboardRequest(host)).getObj();
     }
 
+
     @Override
     public void setSession() throws IOException, UnsuccessfulHttpException {
-        JSONObject json = new JSONObject();
+        Request initRequest = new Request.Builder()
+                .url(host)
+                .get()
+                .addHeader("Accept", "text/html,application/xhtml+xml")
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .build();
 
-        try {
-            json.put("username", login);
-            json.put("password", password);
-        } catch (JSONException e) {
-            logError("Failed to build login JSON payload", e);
+        String sessionCookie;
+        String csrfToken;
+
+        try (Response initResponse = CLIENT.newCall(initRequest).execute()) {
+
+            String rawCookie = initResponse.header("Set-Cookie");
+
+            if (rawCookie == null) {
+                throw new IOException("Failed to get init cookie");
+            }
+
+            sessionCookie = rawCookie.split(";", 2)[0];
+
+            String cookieValue = sessionCookie.substring("3x-ui=".length());
+
+            byte[] decodedBytes = Base64.getUrlDecoder().decode(cookieValue);
+
+            String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
+
+            int lastPipeIndex = decodedString.lastIndexOf('|');
+
+            if (lastPipeIndex == -1) {
+                throw new IOException("Failed to parse decoded cookie");
+            }
+
+            String sessionData = decodedString.substring(0, lastPipeIndex);
+
+            String[] parts = sessionData.split("\\|");
+
+            if (parts.length < 2) {
+                throw new IOException("Invalid session data");
+            }
+
+            String gobBase64 = parts[1];
+
+            byte[] gobDecodedBytes = Base64.getUrlDecoder().decode(gobBase64);
+
+            String gobDecodedString = new String(gobDecodedBytes, StandardCharsets.UTF_8);
+
+            Matcher csrfMatcher = Pattern.compile("CSRF_TOKEN.+?([A-Za-z0-9\\-_]{32,})")
+                    .matcher(gobDecodedString);
+
+            if (!csrfMatcher.find()) {
+                throw new IOException("Failed to extract csrf token");
+            }
+
+            csrfToken = csrfMatcher.group(1);
+
+            logInfo("CSRF token extracted successfully");
         }
 
-        String url = String.format("%s/login", host);
+        RequestBody formBody = new FormBody.Builder()
+                .add("username", login)
+                .add("password", password)
+                .add("twoFactorCode", twoFactorCode == null ? "" : twoFactorCode)
+                .build();
 
-        logInfo("Creating session. host={} login={}", host, login);
+        String loginUrl = String.format("%s/login", host);
 
         Request request = new Request.Builder()
-                .url(url)
-                .post(RequestBody.create(json.toString(), MEDIA_TYPE_JSON))
+                .url(loginUrl)
+                .post(formBody)
+                .addHeader("Accept", "application/json, text/plain, */*")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                .addHeader("X-Requested-With", "XMLHttpRequest")
+                .addHeader("X-CSRF-Token", csrfToken)
+                .addHeader("Referer", host + "/")
+                .addHeader("Cookie", sessionCookie)
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36")
                 .build();
 
         long start = System.currentTimeMillis();
@@ -150,24 +215,36 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
 
             long duration = System.currentTimeMillis() - start;
 
-            if (response.isSuccessful()) {
+            String responseBody = response.body().string();
 
-                cookie = response.header("Set-Cookie");
+            logInfo("Login response status={} body={} durationMs={}",
+                    response.code(),
+                    responseBody,
+                    duration);
 
-                if (cookie == null) {
-                    logError("Login success but cookie missing. url={} durationMs={}", url, duration);
-                } else {
-                    logInfo("Session created successfully. url={} durationMs={}", url, duration);
-                }
-            } else {
-                logError("Login request failed. url={} status={} message={} durationMs={}",
-                        url,
+            if (!response.isSuccessful()) {
+
+                logError("Login request failed. url={} status={} message={} body={} durationMs={}",
+                        loginUrl,
                         response.code(),
                         response.message(),
+                        responseBody,
                         duration);
 
                 throw new UnsuccessfulHttpException(response.code(), response.message());
             }
+
+            String rawCookie = response.header("Set-Cookie");
+
+            if (rawCookie != null) {
+                cookie = rawCookie.split(";", 2)[0];
+            } else {
+                cookie = sessionCookie;
+            }
+
+            logInfo("Session created successfully. url={} durationMs={}",
+                    loginUrl,
+                    duration);
         }
     }
 

@@ -93,6 +93,7 @@ public interface ThreeUIAPI {
         // Required
         private String login;
         private String password;
+        private String twoFactorCode;
         private boolean devMode;
         private String host;
 
@@ -125,6 +126,16 @@ public interface ThreeUIAPI {
         }
 
         /**
+         * Password
+         */
+        @Contract("null -> fail")
+        public Builder setTwoFactorCode(String twoFactorCode) {
+            Objects.requireNonNull(twoFactorCode);
+            this.twoFactorCode = twoFactorCode;
+            return this;
+        }
+
+        /**
          * Example: http://109.234.38.174:2053 or https://vpn3.megoru.ru
          * Only in this format.
          */
@@ -146,7 +157,7 @@ public interface ThreeUIAPI {
             else if (host == null)
                 throw new IllegalArgumentException("host cannot be null!");
             else
-                return new ThreeUIAPIImpl(login, password, devMode, host);
+                return new ThreeUIAPIImpl(login, password, devMode, host, twoFactorCode);
         }
     }
 }

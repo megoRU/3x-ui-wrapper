@@ -11,4 +11,5 @@ public class Login implements APIObject, APIRequestData {
 
     private final String username;
     private final String password;
+    private final String twoFactorCode;
 }

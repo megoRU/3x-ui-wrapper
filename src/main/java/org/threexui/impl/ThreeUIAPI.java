@@ -23,10 +23,9 @@ public interface ThreeUIAPI {
 
     /**
      * @param inboundId It`s ID from panel
-     * @param clientId
-     * client.id → VMESS / VLESS
-     * client.password → TROJAN
-     * client.email → Shadowsocks
+     * @param clientId  client.id → VMESS / VLESS
+     *                  client.password → TROJAN
+     *                  client.email → Shadowsocks
      * @return {@link Boolean} status
      */
     Boolean resetClientTraffic(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException;
@@ -38,26 +37,24 @@ public interface ThreeUIAPI {
 
     /**
      * @param inboundId It`s ID from panel
-     * @param clientId
-     * client.id → VMESS / VLESS
-     * client.password → TROJAN
-     * client.email → Shadowsocks
+     * @param clientId  client.id → VMESS / VLESS
+     *                  client.password → TROJAN
+     *                  client.email → Shadowsocks
      * @return {@link Boolean} status
      */
     Boolean deleteClient(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param inboundId It`s ID from panel
-     * @param email email
+     * @param email     email
      * @return {@link Boolean} status
      */
     Boolean deleteClientByEmail(int inboundId, @NotNull String email) throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @param clientId
-     * client.id → VMESS / VLESS
-     * client.password → TROJAN
-     * client.email → Shadowsocks
+     * @param clientId client.id → VMESS / VLESS
+     *                 client.password → TROJAN
+     *                 client.email → Shadowsocks
      * @return {@link ClientTraffics} Statistics on the use of client traffic
      */
     ClientTraffics getClientTraffics(@NotNull String clientId) throws UnsuccessfulHttpException, IOException;
@@ -83,17 +80,10 @@ public interface ThreeUIAPI {
 
     List<Inboard> getInboards() throws UnsuccessfulHttpException, IOException;
 
-    /**
-     * Setup new Session
-     */
-    void setSession() throws UnsuccessfulHttpException, IOException;
-
     class Builder {
 
         // Required
-        private String login;
-        private String password;
-        private String twoFactorCode;
+        private String token;
         private boolean devMode;
         private String host;
 
@@ -109,29 +99,9 @@ public interface ThreeUIAPI {
          * Password
          */
         @Contract("null -> fail")
-        public Builder setPassword(String password) {
-            Objects.requireNonNull(password);
-            this.password = password;
-            return this;
-        }
-
-        /**
-         * Login
-         */
-        @Contract("null -> fail")
-        public Builder setLogin(String login) {
-            Objects.requireNonNull(login);
-            this.login = login;
-            return this;
-        }
-
-        /**
-         * Password
-         */
-        @Contract("null -> fail")
-        public Builder setTwoFactorCode(String twoFactorCode) {
-            Objects.requireNonNull(twoFactorCode);
-            this.twoFactorCode = twoFactorCode;
+        public Builder setToken(String token) {
+            Objects.requireNonNull(token);
+            this.token = token;
             return this;
         }
 
@@ -150,14 +120,12 @@ public interface ThreeUIAPI {
          * @throws IllegalArgumentException if some fields null
          */
         public ThreeUIAPI build() throws UnsuccessfulHttpException, IOException {
-            if (login == null)
-                throw new IllegalArgumentException("login cannot be null!");
-            else if (password == null)
-                throw new IllegalArgumentException("password cannot be null!");
+            if (token == null)
+                throw new IllegalArgumentException("token cannot be null!");
             else if (host == null)
                 throw new IllegalArgumentException("host cannot be null!");
             else
-                return new ThreeUIAPIImpl(login, password, devMode, host, twoFactorCode);
+                return new ThreeUIAPIImpl(token, devMode, host);
         }
     }
 }

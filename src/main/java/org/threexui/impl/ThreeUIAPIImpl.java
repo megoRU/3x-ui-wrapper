@@ -14,12 +14,8 @@ import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 import org.threexui.utils.JsonUtil;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ThreeUIAPIImpl implements ThreeUIAPI {
 
@@ -28,20 +24,13 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     private static final MediaType MEDIA_TYPE_JSON = MediaType.get("application/json");
 
     private final String host;
-    private String cookie;
-    private final String login;
-    private final String password;
-    private final String twoFactorCode;
+    private final String token;
     private final boolean devMode;
 
-    protected ThreeUIAPIImpl(String login, String password, boolean devMode, String host, String twoFactorCode) throws UnsuccessfulHttpException, IOException {
-        this.login = login;
-        this.password = password;
+    protected ThreeUIAPIImpl(String token, boolean devMode, String host) throws UnsuccessfulHttpException, IOException {
+        this.token = token;
         this.host = host;
         this.devMode = devMode;
-        this.twoFactorCode = twoFactorCode;
-        //Устанавливаем сессию
-        setSession();
     }
 
     private void logInfo(String message, Object... args) {
@@ -128,126 +117,6 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         return parseResponse(InboardResponse.class, new InboardRequest(host)).getObj();
     }
 
-
-    @Override
-    public void setSession() throws IOException, UnsuccessfulHttpException {
-        Request initRequest = new Request.Builder()
-                .url(host)
-                .get()
-                .addHeader("Accept", "text/html,application/xhtml+xml")
-                .addHeader("User-Agent", "Mozilla/5.0")
-                .build();
-
-        String sessionCookie;
-        String csrfToken;
-
-        try (Response initResponse = CLIENT.newCall(initRequest).execute()) {
-
-            String rawCookie = initResponse.header("Set-Cookie");
-
-            if (rawCookie == null) {
-                throw new IOException("Failed to get init cookie");
-            }
-
-            sessionCookie = rawCookie.split(";", 2)[0];
-
-            String cookieValue = sessionCookie.substring("3x-ui=".length());
-
-            byte[] decodedBytes = Base64.getUrlDecoder().decode(cookieValue);
-
-            String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
-
-            int lastPipeIndex = decodedString.lastIndexOf('|');
-
-            if (lastPipeIndex == -1) {
-                throw new IOException("Failed to parse decoded cookie");
-            }
-
-            String sessionData = decodedString.substring(0, lastPipeIndex);
-
-            String[] parts = sessionData.split("\\|");
-
-            if (parts.length < 2) {
-                throw new IOException("Invalid session data");
-            }
-
-            String gobBase64 = parts[1];
-
-            byte[] gobDecodedBytes = Base64.getUrlDecoder().decode(gobBase64);
-
-            String gobDecodedString = new String(gobDecodedBytes, StandardCharsets.UTF_8);
-
-            Matcher csrfMatcher = Pattern.compile("CSRF_TOKEN.+?([A-Za-z0-9\\-_]{32,})")
-                    .matcher(gobDecodedString);
-
-            if (!csrfMatcher.find()) {
-                throw new IOException("Failed to extract csrf token");
-            }
-
-            csrfToken = csrfMatcher.group(1);
-
-            logInfo("CSRF token extracted successfully");
-        }
-
-        RequestBody formBody = new FormBody.Builder()
-                .add("username", login)
-                .add("password", password)
-                .add("twoFactorCode", twoFactorCode == null ? "" : twoFactorCode)
-                .build();
-
-        String loginUrl = String.format("%s/login", host);
-
-        Request request = new Request.Builder()
-                .url(loginUrl)
-                .post(formBody)
-                .addHeader("Accept", "application/json, text/plain, */*")
-                .addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                .addHeader("X-Requested-With", "XMLHttpRequest")
-                .addHeader("X-CSRF-Token", csrfToken)
-                .addHeader("Referer", host + "/")
-                .addHeader("Cookie", sessionCookie)
-                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36")
-                .build();
-
-        long start = System.currentTimeMillis();
-
-        try (Response response = CLIENT.newCall(request).execute()) {
-
-            long duration = System.currentTimeMillis() - start;
-
-            String responseBody = response.body().string();
-
-            logInfo("Login response status={} body={} durationMs={}",
-                    response.code(),
-                    responseBody,
-                    duration);
-
-            if (!response.isSuccessful()) {
-
-                logError("Login request failed. url={} status={} message={} body={} durationMs={}",
-                        loginUrl,
-                        response.code(),
-                        response.message(),
-                        responseBody,
-                        duration);
-
-                throw new UnsuccessfulHttpException(response.code(), response.message());
-            }
-
-            String rawCookie = response.header("Set-Cookie");
-
-            if (rawCookie != null) {
-                cookie = rawCookie.split(";", 2)[0];
-            } else {
-                cookie = sessionCookie;
-            }
-
-            logInfo("Session created successfully. url={} durationMs={}",
-                    loginUrl,
-                    duration);
-        }
-    }
-
     private BackupResponse parseFileResponse(@NotNull APIRequest apiRequest) throws IOException, UnsuccessfulHttpException {
         String url = apiRequest.getUrl();
 
@@ -256,7 +125,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         Request.Builder requestBuilder = new Request.Builder()
                 .url(url)
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Cookie", cookie);
+                .addHeader("Authorization", "Bearer " + token);
 
         if (apiRequest.getRequestMethod() == APIRequest.RequestMethod.GET) {
             requestBuilder.get();
@@ -307,7 +176,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         Request.Builder requestBuilder = new Request.Builder()
                 .url(url)
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Cookie", cookie);
+                .addHeader("Authorization", "Bearer " + token);
 
         if (method == APIRequest.RequestMethod.GET) {
             requestBuilder.get();

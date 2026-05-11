@@ -22,7 +22,7 @@ Add JitPack repository and dependency:
 <dependency>
     <groupId>com.github.megoRU</groupId>
     <artifactId>3x-ui-wrapper</artifactId>
-    <version>2.1.2</version>
+    <version>2.2.1</version>
 </dependency>
 ```
 
@@ -34,9 +34,8 @@ Add JitPack repository and dependency:
 
 ```java
 ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
-        .setHost("http://your-host:port")
-        .setLogin("admin")
-        .setPassword("admin")
+        .setHost("https://your-host:port")
+        .setToken("TestTokenPhQgU9Cr84AqJ9f0hyPE")
         .enableDevMode()
         .build();
 
@@ -48,9 +47,8 @@ System.out.println("Deleted: " + success);
 
 ```java
 ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
-        .setHost("http://your-host:port")
-        .setLogin("admin")
-        .setPassword("admin")
+        .setHost("https://your-host:port")
+        .setToken("TestTokenPhQgU9Cr84AqJ9f0hyPE")
         .enableDevMode()
         .build();
 

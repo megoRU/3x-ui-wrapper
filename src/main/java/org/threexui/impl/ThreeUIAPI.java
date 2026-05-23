@@ -36,20 +36,11 @@ public interface ThreeUIAPI {
     File getBackUpFile() throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @param inboundId It`s ID from panel
-     * @param clientId  client.id → VMESS / VLESS
-     *                  client.password → TROJAN
-     *                  client.email → Shadowsocks
+     * @param clientId  client.password → TROJAN
+     *                  client.email → Shadowsocks / VMESS / VLESS
      * @return {@link Boolean} status
      */
-    Boolean deleteClient(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException;
-
-    /**
-     * @param inboundId It`s ID from panel
-     * @param email     email
-     * @return {@link Boolean} status
-     */
-    Boolean deleteClientByEmail(int inboundId, @NotNull String email) throws UnsuccessfulHttpException, IOException;
+    Boolean deleteClient(@NotNull String clientId) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param clientId client.id → VMESS / VLESS

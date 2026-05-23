@@ -1,6 +1,5 @@
 package org.threexui.entity.api;
 
-import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,26 +16,16 @@ public class Inboard implements APIObject {
 
     private List<ClientTraffics> clientStats;
     private long down;
-    private String settings;
+    private Settings settings;
     private long up;
     private boolean enable;
     private long expiryTime;
     private long id;
     private String listen;
     private long port;
-    private String streamSettings;
+    private StreamSettings streamSettings;
     private String protocol;
     private String remark;
     private String tag;
     private long total;
-
-    public Settings getSettings() {
-        Gson gson = new Gson();
-        return gson.fromJson(settings, Settings.class);
-    }
-
-    public StreamSettings getStreamSettings() {
-        Gson gson = new Gson();
-        return gson.fromJson(streamSettings, StreamSettings.class);
-    }
 }

@@ -36,6 +36,7 @@ public class StreamSettings {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ExternalProxy {
+
         private String forceTls;
         private String dest;
         private int port;
@@ -49,12 +50,13 @@ public class StreamSettings {
 
         private boolean show;
         private int xver;
-        private String dest;
+        private String target;
         private List<String> serverNames;
         private String privateKey;
-        private String minClient;
-        private String maxClient;
+        private String minClientVer;
+        private String maxClientVer;
         private int maxTimediff;
+        private String mldsa65Seed;
         private List<String> shortIds;
         private Settings settings;
     }
@@ -78,6 +80,7 @@ public class StreamSettings {
         private String fingerprint;
         private String serverName;
         private String spiderX;
+        private String mldsa65Verify;
     }
 
     @Getter

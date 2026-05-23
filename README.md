@@ -22,7 +22,7 @@ Add JitPack repository and dependency:
 <dependency>
     <groupId>com.github.megoRU</groupId>
     <artifactId>3x-ui-wrapper</artifactId>
-    <version>2.2.3</version>
+    <version>2.2.4</version>
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
         .enableDevMode()
         .build();
 
-boolean success = threeUIAPI.deleteClient(1, "uuid-or-email");
+boolean success = threeUIAPI.deleteClient("uuid-or-email");
 System.out.println("Deleted: " + success);
 ```
 
@@ -52,16 +52,16 @@ ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
         .enableDevMode()
         .build();
 
-Client client = new Client.Builder()
-        .email("testuser123")
-        .method("aes-256-gcm")
-        .enable(true)
-        .subId("your-sub-id")
-        .inboundId(1)
-        .password("secure-password")
-        .build();
+AddClient.ClientBuilder addClientBuilder = new AddClient.ClientBuilder();
+        addClientBuilder.setEmail("TestEmail");
+        addClientBuilder.setId(UUID.randomUUID().toString());
+        addClientBuilder.setLimitIp(3);
+        addClientBuilder.setFlow(FlowEnum.XLTS_RPRX_VISION);
+        addClientBuilder.setEnable(true);
 
-boolean success = threeUIAPI.addClient(client);
+AddClient addClient = new AddClient(addClientBuilder, new int[]{1});
+
+boolean success = threeUIAPI.addClient(addClient);
 System.out.println("Created: " + success);
 ```
 

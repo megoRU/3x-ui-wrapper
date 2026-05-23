@@ -1,12 +1,10 @@
 package org.threexui.entity.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.threexui.impl.APIObject;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 @Builder
 @Getter
@@ -15,23 +13,32 @@ import java.text.DecimalFormat;
 public class ClientTraffics implements APIObject {
 
     private int id;
-    private boolean enable;
     private String email;
-    private long up;
-    private int inboundId;
     private String subId;
-    private long lastOnline;
-    private long down;
+    private String uuid;
+    private String password;
+    private String auth;
+    private String flow;
+    private String security;
+    private int limitIp;
+    private long totalGB;
     private long expiryTime;
-    private long total;
+    private boolean enable;
+    private long tgId;
+    private String comment;
     private long reset;
+    private long createdAt;
+    private long updatedAt;
+    private Object reverse;
+    private List<Integer> inboundIds;
+    private Traffic traffic;
 
     /**
      * @return {@link String} Returns how many gigabytes the client downloaded in 2 decimal places. For example 1.94
      */
     public String getDown() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        double count = (double) down / 1024 / 1024 / 1024;
+        double count = (double) traffic.getDown() / 1024 / 1024 / 1024;
         return decimalFormat.format(count).replace(",", ".");
     }
 
@@ -40,7 +47,7 @@ public class ClientTraffics implements APIObject {
      */
     public String getUp() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        double count = (double) up / 1024 / 1024 / 1024;
+        double count = (double) traffic.getUp() / 1024 / 1024 / 1024;
         return decimalFormat.format(count).replace(",", ".");
     }
 
@@ -49,7 +56,7 @@ public class ClientTraffics implements APIObject {
      */
     public String getTotalUsed() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        double count = (double) (up + down) / 1024.0 / 1024.0 / 1024.0;
+        double count = (double) (traffic.getUp() + traffic.getDown()) / 1024.0 / 1024.0 / 1024.0;
         return decimalFormat.format(count).replace(",", ".");
     }
 
@@ -59,8 +66,28 @@ public class ClientTraffics implements APIObject {
      */
     public String getTotal() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        if (total == 0) return "-1";
-        double count = (double) total / 1024 / 1024 / 1024;
+        if (traffic.getTotal() == 0) return "-1";
+        double count = (double) traffic.getTotal() / 1024 / 1024 / 1024;
         return decimalFormat.format(count).replace(",", ".");
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Traffic {
+
+        private long id;
+        private long inboundId;
+        private boolean enable;
+        private String email;
+        private String uuid;
+        private String subId;
+        private long up;
+        private long down;
+        private long expiryTime;
+        private long total;
+        private long reset;
+        private long lastOnline;
     }
 }

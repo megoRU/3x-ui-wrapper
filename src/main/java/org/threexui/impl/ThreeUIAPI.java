@@ -2,10 +2,7 @@ package org.threexui.impl;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.threexui.entity.api.Client;
-import org.threexui.entity.api.ClientTraffics;
-import org.threexui.entity.api.Inboard;
-import org.threexui.entity.api.StatusPanel;
+import org.threexui.entity.api.*;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 
 import java.io.File;
@@ -19,7 +16,7 @@ public interface ThreeUIAPI {
      * @param client new client settings
      * @return {@link Boolean} status
      */
-    Boolean addClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
+    Boolean addClient(@NotNull AddClient client) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param inboundId It`s ID from panel
@@ -43,12 +40,10 @@ public interface ThreeUIAPI {
     Boolean deleteClient(@NotNull String clientId) throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @param clientId client.id → VMESS / VLESS
-     *                 client.password → TROJAN
-     *                 client.email → Shadowsocks
+     *
      * @return {@link ClientTraffics} Statistics on the use of client traffic
      */
-    ClientTraffics getClientTraffics(@NotNull String clientId) throws UnsuccessfulHttpException, IOException;
+    List<ClientTraffics> getClientsList() throws UnsuccessfulHttpException, IOException;
 
     /**
      * @return {@link List<String>} List of online emails
@@ -62,7 +57,7 @@ public interface ThreeUIAPI {
      * Some data is better not to change. Since I myself have not yet understood what this can lead to.
      * It's best to use this to turn on and off. You can also change the limits.
      */
-    Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
+    Boolean updateClient(@NotNull AddClient client) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @return {@link StatusPanel} Status panel

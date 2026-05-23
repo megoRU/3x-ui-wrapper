@@ -4,10 +4,7 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.threexui.entity.api.Client;
-import org.threexui.entity.api.ClientTraffics;
-import org.threexui.entity.api.Inboard;
-import org.threexui.entity.api.StatusPanel;
+import org.threexui.entity.api.*;
 import org.threexui.entity.api.request.*;
 import org.threexui.entity.api.response.*;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
@@ -46,7 +43,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public Boolean addClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException {
+    public Boolean addClient(@NotNull AddClient client) throws UnsuccessfulHttpException, IOException {
         StatusResponse createClient = parseResponse(StatusResponse.class, new ClientCreateRequest(host, client));
         return createClient.isSuccess();
     }
@@ -72,8 +69,8 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public ClientTraffics getClientTraffics(@NotNull String email) throws IOException, UnsuccessfulHttpException {
-        ClientResponse clientResponse = parseResponse(ClientResponse.class, new ClientTrafficsRequest(host, email));
+    public List<ClientTraffics> getClientsList() throws IOException, UnsuccessfulHttpException {
+        ClientListResponse clientResponse = parseResponse(ClientListResponse.class, new ClientListRequest(host));
         return clientResponse.getObj();
     }
 
@@ -83,21 +80,10 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException {
-        String password = client.getPassword();
-        String clientId = client.getId();
-
-        if (clientId == null) {
-            if (password != null) {
-                StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, client, password));
-                return updateClient.isSuccess();
-            } else {
-                throw new IllegalArgumentException("Password or clientId null");
-            }
-        } else {
-            StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, client, clientId));
-            return updateClient.isSuccess();
-        }
+    public Boolean updateClient(@NotNull AddClient client) throws UnsuccessfulHttpException, IOException {
+        String email = client.getClient().getEmail();
+        StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, client, email));
+        return updateClient.isSuccess();
     }
 
     @Override

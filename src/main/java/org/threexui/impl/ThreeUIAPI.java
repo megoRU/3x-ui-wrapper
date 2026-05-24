@@ -3,8 +3,6 @@ package org.threexui.impl;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.threexui.entity.api.*;
-import org.threexui.entity.api.response.BooleanObjectResponse;
-import org.threexui.entity.api.response.StatusResponse;
 import org.threexui.entity.api.response.RawObjectResponse;
 import org.threexui.entity.api.response.StringObjectResponse;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
@@ -67,13 +65,7 @@ public interface ThreeUIAPI {
 
     List<Inboard> getInboards() throws UnsuccessfulHttpException, IOException;
 
-    StatusResponse login(@NotNull String username, @NotNull String password, String twoFactorCode) throws UnsuccessfulHttpException, IOException;
-
-    Boolean logout() throws UnsuccessfulHttpException, IOException;
-
     StringObjectResponse getCsrfToken() throws UnsuccessfulHttpException, IOException;
-
-    Boolean getTwoFactorEnable() throws UnsuccessfulHttpException, IOException;
 
     List<Inboard> getInboardsSlim() throws UnsuccessfulHttpException, IOException;
 

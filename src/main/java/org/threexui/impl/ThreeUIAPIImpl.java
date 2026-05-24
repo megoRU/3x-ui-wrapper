@@ -97,25 +97,8 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public StatusResponse login(@NotNull String username, @NotNull String password, String twoFactorCode) throws UnsuccessfulHttpException, IOException {
-        String oneTimeCode = twoFactorCode == null ? "" : twoFactorCode;
-        return parseResponse(StatusResponse.class, new LoginRequest(host, username, password, oneTimeCode));
-    }
-
-    @Override
-    public Boolean logout() throws UnsuccessfulHttpException, IOException {
-        return parseResponse(StatusResponse.class, new LogoutRequest(host)).isSuccess();
-    }
-
-    @Override
     public StringObjectResponse getCsrfToken() throws UnsuccessfulHttpException, IOException {
         return parseResponse(StringObjectResponse.class, new CsrfTokenRequest(host));
-    }
-
-    @Override
-    public Boolean getTwoFactorEnable() throws UnsuccessfulHttpException, IOException {
-        BooleanObjectResponse response = parseResponse(BooleanObjectResponse.class, new TwoFactorEnabledRequest(host));
-        return response.getObj() != null && response.getObj();
     }
 
     @Override
@@ -155,7 +138,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
 
     @Override
     public RawObjectResponse getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, IOException {
-        return parseResponse(RawObjectResponse.class, new ClientsPagedRequest(host, queryParams));
+        return parseResponse(RawObjectResponse.class, new APIRequest(host + "/panel/api/clients/list/paged" + toQueryString(queryParams), APIRequest.RequestMethod.GET) {});
     }
 
     @Override
@@ -259,5 +242,23 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
                 throw new UnsuccessfulHttpException(response.code(), response.message());
             }
         }
+    }
+
+    private String toQueryString(@NotNull Map<String, String> queryParams) {
+        if (queryParams.isEmpty()) {
+            return "";
+        }
+        StringBuilder queryStringBuilder = new StringBuilder("?");
+        boolean isFirstParameter = true;
+        for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+            if (!isFirstParameter) {
+                queryStringBuilder.append("&");
+            }
+            queryStringBuilder.append(entry.getKey());
+            queryStringBuilder.append("=");
+            queryStringBuilder.append(entry.getValue());
+            isFirstParameter = false;
+        }
+        return queryStringBuilder.toString();
     }
 }

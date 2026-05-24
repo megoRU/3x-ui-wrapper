@@ -30,7 +30,7 @@ Add JitPack repository and dependency:
 
 ## 🚀 Examples
 
-### ➖ Delete config
+### ➖ Delete client config
 
 ```java
 ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
@@ -39,11 +39,12 @@ ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
         .enableDevMode()
         .build();
 
-boolean success = threeUIAPI.deleteClient("uuid-or-email");
-System.out.println("Deleted: " + success);
+boolean deleted = threeUIAPI.deleteClient("email");
+
+System.out.println("Client deleted: " + deleted);
 ```
 
-### ➕ Create config
+### ➕ Create client config
 
 ```java
 ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
@@ -52,17 +53,20 @@ ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
         .enableDevMode()
         .build();
 
-AddClient.ClientBuilder addClientBuilder = new AddClient.ClientBuilder();
-        addClientBuilder.setEmail("TestEmail");
-        addClientBuilder.setId(UUID.randomUUID().toString());
-        addClientBuilder.setLimitIp(3);
-        addClientBuilder.setFlow(FlowEnum.XLTS_RPRX_VISION);
-        addClientBuilder.setEnable(true);
+ClientBuilder clientBuilder = new ClientBuilder();
+clientBuilder.setEmail("TestEmail");
+clientBuilder.setId(UUID.randomUUID().toString());
+clientBuilder.setLimitIp(3);
+clientBuilder.setFlow(FlowEnum.XLTS_RPRX_VISION);
+clientBuilder.setEnable(true);
 
-AddClient client = new AddClient(addClientBuilder, new int[]{1});
+Client client = new Client();
+client.setClient(clientBuilder);
+client.setInboundId(1);
 
-boolean success = threeUIAPI.client(client);
-System.out.println("Created: " + success);
+boolean created = threeUIAPI.addClient(client);
+
+System.out.println("Client created: " + created);
 ```
 
 ---

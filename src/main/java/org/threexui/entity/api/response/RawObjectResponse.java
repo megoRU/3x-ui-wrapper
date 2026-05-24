@@ -11,10 +11,13 @@ import org.threexui.impl.APIObject;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RawObjectResponse implements APIObject {
+
     @SerializedName("success")
     private boolean success;
+
     @SerializedName("msg")
     private String message;
+
     @SerializedName("obj")
     private JsonElement obj;
 }

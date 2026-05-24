@@ -63,26 +63,65 @@ public interface ThreeUIAPI {
      */
     StatusPanel getStatus() throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @return {@link List<Inboard>} Full inbounds list from /panel/api/inbounds/list
+     */
     List<Inboard> getInboards() throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @return {@link StringObjectResponse} CSRF token in obj field from /csrf-token
+     */
     StringObjectResponse getCsrfToken() throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @return {@link List<Inboard>} Lightweight inbounds list from /panel/api/inbounds/list/slim
+     */
     List<Inboard> getInboardsSlim() throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @return {@link RawObjectResponse} Endpoint /panel/api/inbounds/options raw obj
+     */
     RawObjectResponse getInboundsOptions() throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @param id inbound identifier in panel database
+     * @return {@link RawObjectResponse} Endpoint /panel/api/inbounds/get/:id raw obj
+     */
     RawObjectResponse getInboundById(int id) throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @param id inbound identifier in panel database
+     * @param enable true to enable inbound, false to disable inbound
+     * @return {@link Boolean} status
+     */
     Boolean setInboundEnable(int id, boolean enable) throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @return {@link Boolean} status for /panel/api/inbounds/resetAllTraffics
+     */
     Boolean resetAllInboundsTraffics() throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @param email client.email → Shadowsocks / VMESS / VLESS / TROJAN
+     * @return {@link RawObjectResponse} Endpoint /panel/api/clients/get/:email raw obj
+     */
     RawObjectResponse getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @param email client.email → Shadowsocks / VMESS / VLESS / TROJAN
+     * @return {@link RawObjectResponse} Endpoint /panel/api/clients/traffic/:email raw obj
+     */
     RawObjectResponse getClientTrafficByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @param queryParams map of query parameters for /panel/api/clients/list/paged
+     * @return {@link RawObjectResponse} paged clients data in raw obj
+     */
     RawObjectResponse getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, IOException;
 
+    /**
+     * @return {@link StatusPanel} Server status from /panel/api/server/status
+     */
     StatusPanel getServerStatus() throws UnsuccessfulHttpException, IOException;
 
     class Builder {

@@ -22,7 +22,7 @@ Add JitPack repository and dependency:
 <dependency>
     <groupId>com.github.megoRU</groupId>
     <artifactId>3x-ui-wrapper</artifactId>
-    <version>2.2.4</version>
+    <version>2.2.5</version>
 </dependency>
 ```
 
@@ -59,9 +59,9 @@ AddClient.ClientBuilder addClientBuilder = new AddClient.ClientBuilder();
         addClientBuilder.setFlow(FlowEnum.XLTS_RPRX_VISION);
         addClientBuilder.setEnable(true);
 
-AddClient addClient = new AddClient(addClientBuilder, new int[]{1});
+AddClient client = new AddClient(addClientBuilder, new int[]{1});
 
-boolean success = threeUIAPI.addClient(addClient);
+boolean success = threeUIAPI.client(client);
 System.out.println("Created: " + success);
 ```
 

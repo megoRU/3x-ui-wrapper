@@ -24,7 +24,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     private final String token;
     private final boolean devMode;
 
-    protected ThreeUIAPIImpl(String token, boolean devMode, String host) throws UnsuccessfulHttpException, IOException {
+    protected ThreeUIAPIImpl(String token, boolean devMode, String host) {
         this.token = token;
         this.host = host;
         this.devMode = devMode;
@@ -43,16 +43,14 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public Boolean addClient(@NotNull AddClient client) throws UnsuccessfulHttpException, IOException {
+    public Boolean addClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException {
         StatusResponse createClient = parseResponse(StatusResponse.class, new ClientCreateRequest(host, client));
         return createClient.isSuccess();
     }
 
     @Override
-    public Boolean resetClientTraffic(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException {
-
-
-        StatusResponse deleteClientRequest = parseResponse(StatusResponse.class, new ResetClientTrafficRequest(host, inboundId, clientId));
+    public Boolean resetClientTraffic(@NotNull String email) throws UnsuccessfulHttpException, IOException {
+        StatusResponse deleteClientRequest = parseResponse(StatusResponse.class, new ResetClientTrafficRequest(host, email));
         return deleteClientRequest.isSuccess();
     }
 
@@ -63,8 +61,8 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public Boolean deleteClient(@NotNull String clientId) throws UnsuccessfulHttpException, IOException {
-        StatusResponse deleteClientRequest = parseResponse(StatusResponse.class, new DeleteClientRequest(host, clientId));
+    public Boolean deleteClient(@NotNull String email) throws UnsuccessfulHttpException, IOException {
+        StatusResponse deleteClientRequest = parseResponse(StatusResponse.class, new DeleteClientRequest(host, email));
         return deleteClientRequest.isSuccess();
     }
 
@@ -80,7 +78,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public Boolean updateClient(@NotNull AddClient client) throws UnsuccessfulHttpException, IOException {
+    public Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException {
         String email = client.getClient().getEmail();
         StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, client, email));
         return updateClient.isSuccess();
@@ -193,9 +191,5 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
                 throw new UnsuccessfulHttpException(response.code(), response.message());
             }
         }
-    }
-
-    private void logResponse(String body) {
-        if (devMode) System.out.printf("Body: %s%n", body);
     }
 }

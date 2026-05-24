@@ -1,33 +1,30 @@
 package org.threexui.entity.api;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.threexui.impl.APIObject;
 import org.threexui.impl.APIRequestData;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class StatusPanel implements APIObject, APIRequestData {
 
     private double cpu;
-    private int cpuCores;
-    private int logicalPro;
-    private double cpuSpeedMhz;
     private Mem mem;
     private Swap swap;
     private Disk disk;
-    private Xray xray;
-    private long uptime;
-    private double[] loads;
-    private int tcpCount;
-    private int udpCount;
     private NetIO netIO;
-    private NetTraffic netTraffic;
-    private PublicIP publicIP;
-    private AppStats appStats;
+    private Xray xray;
+    private int tcpCount;
+    private Load load;
 
     @Getter
     @Setter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class Mem {
 
@@ -37,6 +34,7 @@ public class StatusPanel implements APIObject, APIRequestData {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class Swap {
 
@@ -46,6 +44,7 @@ public class StatusPanel implements APIObject, APIRequestData {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class Disk {
 
@@ -55,16 +54,7 @@ public class StatusPanel implements APIObject, APIRequestData {
 
     @Getter
     @Setter
-    @AllArgsConstructor
-    public static class Xray {
-
-        private String state;
-        private String errorMsg;
-        private String version;
-    }
-
-    @Getter
-    @Setter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class NetIO {
 
@@ -74,29 +64,22 @@ public class StatusPanel implements APIObject, APIRequestData {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     @AllArgsConstructor
-    public static class NetTraffic {
+    public static class Xray {
 
-        private long sent;
-        private long recv;
+        private String state;
+        private String version;
     }
 
     @Getter
     @Setter
+    @NoArgsConstructor
     @AllArgsConstructor
-    public static class PublicIP {
+    public static class Load {
 
-        private String ipv4;
-        private String ipv6;
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class AppStats {
-
-        private int threads;
-        private long mem;
-        private long uptime;
+        private double load1;
+        private double load5;
+        private double load15;
     }
 }

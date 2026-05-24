@@ -2,7 +2,10 @@ package org.threexui.impl;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.threexui.entity.api.*;
+import org.threexui.entity.api.Client;
+import org.threexui.entity.api.ClientTraffics;
+import org.threexui.entity.api.Inboard;
+import org.threexui.entity.api.StatusPanel;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 
 import java.io.File;
@@ -16,16 +19,13 @@ public interface ThreeUIAPI {
      * @param client new client settings
      * @return {@link Boolean} status
      */
-    Boolean addClient(@NotNull AddClient client) throws UnsuccessfulHttpException, IOException;
+    Boolean addClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @param inboundId It`s ID from panel
-     * @param clientId  client.id → VMESS / VLESS
-     *                  client.password → TROJAN
-     *                  client.email → Shadowsocks
+     * @param email client.email → Shadowsocks / VMESS / VLESS / TROJAN
      * @return {@link Boolean} status
      */
-    Boolean resetClientTraffic(int inboundId, @NotNull String clientId) throws UnsuccessfulHttpException, IOException;
+    Boolean resetClientTraffic(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @return {@link File} file backup
@@ -33,11 +33,10 @@ public interface ThreeUIAPI {
     File getBackUpFile() throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @param clientId  client.password → TROJAN
-     *                  client.email → Shadowsocks / VMESS / VLESS
+     * @param email client.email → Shadowsocks / VMESS / VLESS / TROJAN
      * @return {@link Boolean} status
      */
-    Boolean deleteClient(@NotNull String clientId) throws UnsuccessfulHttpException, IOException;
+    Boolean deleteClient(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
     /**
      *
@@ -57,7 +56,7 @@ public interface ThreeUIAPI {
      * Some data is better not to change. Since I myself have not yet understood what this can lead to.
      * It's best to use this to turn on and off. You can also change the limits.
      */
-    Boolean updateClient(@NotNull AddClient client) throws UnsuccessfulHttpException, IOException;
+    Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @return {@link StatusPanel} Status panel

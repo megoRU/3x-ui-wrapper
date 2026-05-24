@@ -3,7 +3,10 @@ package org.threexui.impl;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.threexui.entity.api.*;
-import org.threexui.entity.api.response.GenericResponse;
+import org.threexui.entity.api.response.BooleanObjectResponse;
+import org.threexui.entity.api.response.StatusResponse;
+import org.threexui.entity.api.response.RawObjectResponse;
+import org.threexui.entity.api.response.StringObjectResponse;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 
 import java.io.File;
@@ -64,29 +67,29 @@ public interface ThreeUIAPI {
 
     List<Inboard> getInboards() throws UnsuccessfulHttpException, IOException;
 
-    GenericResponse login(@NotNull String username, @NotNull String password, String twoFactorCode) throws UnsuccessfulHttpException, IOException;
+    StatusResponse login(@NotNull String username, @NotNull String password, String twoFactorCode) throws UnsuccessfulHttpException, IOException;
 
     Boolean logout() throws UnsuccessfulHttpException, IOException;
 
-    GenericResponse getCsrfToken() throws UnsuccessfulHttpException, IOException;
+    StringObjectResponse getCsrfToken() throws UnsuccessfulHttpException, IOException;
 
     Boolean getTwoFactorEnable() throws UnsuccessfulHttpException, IOException;
 
     List<Inboard> getInboardsSlim() throws UnsuccessfulHttpException, IOException;
 
-    GenericResponse getInboundsOptions() throws UnsuccessfulHttpException, IOException;
+    RawObjectResponse getInboundsOptions() throws UnsuccessfulHttpException, IOException;
 
-    GenericResponse getInboundById(int id) throws UnsuccessfulHttpException, IOException;
+    RawObjectResponse getInboundById(int id) throws UnsuccessfulHttpException, IOException;
 
     Boolean setInboundEnable(int id, boolean enable) throws UnsuccessfulHttpException, IOException;
 
     Boolean resetAllInboundsTraffics() throws UnsuccessfulHttpException, IOException;
 
-    GenericResponse getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
+    RawObjectResponse getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
-    GenericResponse getClientTrafficByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
+    RawObjectResponse getClientTrafficByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
-    GenericResponse getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, IOException;
+    RawObjectResponse getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, IOException;
 
     StatusPanel getServerStatus() throws UnsuccessfulHttpException, IOException;
 

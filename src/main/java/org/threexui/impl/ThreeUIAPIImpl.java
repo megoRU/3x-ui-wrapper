@@ -11,7 +11,10 @@ import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 import org.threexui.utils.JsonUtil;
 
 import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class ThreeUIAPIImpl implements ThreeUIAPI {
@@ -95,6 +98,103 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         return parseResponse(InboardResponse.class, new InboardRequest(host)).getObj();
     }
 
+    @Override
+    public GenericResponse login(@NotNull String username, @NotNull String password, String twoFactorCode) throws UnsuccessfulHttpException, IOException {
+        Map<String, Object> body = Map.of("username", username, "password", password, "twoFactorCode", twoFactorCode == null ? "" : twoFactorCode);
+        return executePost("/login", body);
+    }
+
+    @Override
+    public Boolean logout() throws UnsuccessfulHttpException, IOException {
+        return executePost("/logout", Map.of()).isSuccess();
+    }
+
+    @Override
+    public GenericResponse getCsrfToken() throws UnsuccessfulHttpException, IOException {
+        return executeGet("/csrf-token");
+    }
+
+    @Override
+    public Boolean getTwoFactorEnable() throws UnsuccessfulHttpException, IOException {
+        GenericResponse response = executePost("/getTwoFactorEnable", Map.of());
+        return response.getObject() != null && response.getObject().getAsBoolean();
+    }
+
+    @Override
+    public List<Inboard> getInboardsSlim() throws UnsuccessfulHttpException, IOException {
+        return parseResponse(InboardResponse.class, new APIRequest(host + "/panel/api/inbounds/list/slim", APIRequest.RequestMethod.GET) {}).getObj();
+    }
+
+    @Override
+    public GenericResponse getInboundsOptions() throws UnsuccessfulHttpException, IOException {
+        return executeGet("/panel/api/inbounds/options");
+    }
+
+    @Override
+    public GenericResponse getInboundById(int id) throws UnsuccessfulHttpException, IOException {
+        return executeGet("/panel/api/inbounds/get/" + id);
+    }
+
+    @Override
+    public Boolean setInboundEnable(int id, boolean enable) throws UnsuccessfulHttpException, IOException {
+        return executePost("/panel/api/inbounds/setEnable/" + id, Map.of("enable", enable)).isSuccess();
+    }
+
+    @Override
+    public Boolean resetAllInboundsTraffics() throws UnsuccessfulHttpException, IOException {
+        return executePost("/panel/api/inbounds/resetAllTraffics", Map.of()).isSuccess();
+    }
+
+    @Override
+    public GenericResponse getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException {
+        return executeGet("/panel/api/clients/get/" + urlEncode(email));
+    }
+
+    @Override
+    public GenericResponse getClientTrafficByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException {
+        return executeGet("/panel/api/clients/traffic/" + urlEncode(email));
+    }
+
+    @Override
+    public GenericResponse getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, IOException {
+        return executeGet("/panel/api/clients/list/paged" + toQueryString(queryParams));
+    }
+
+    @Override
+    public StatusPanel getServerStatus() throws UnsuccessfulHttpException, IOException {
+        GenericResponse response = executeGet("/panel/api/server/status");
+        return JsonUtil.fromJson(response.getObject().toString(), StatusPanel.class);
+    }
+
+    private GenericResponse executeGet(String path) throws UnsuccessfulHttpException, IOException {
+        return parseResponse(GenericResponse.class, new APIRequest(host + path, APIRequest.RequestMethod.GET) {});
+    }
+
+    private GenericResponse executePost(String path, Map<String, ?> body) throws UnsuccessfulHttpException, IOException {
+        return parseResponse(GenericResponse.class, new APIRequest(host + path, APIRequest.RequestMethod.POST, new MapRequestData(body)) {});
+    }
+
+    private String urlEncode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    }
+
+    private String toQueryString(Map<String, String> queryParams) {
+        if (queryParams.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder queryStringBuilder = new StringBuilder("?");
+        boolean isFirstParameter = true;
+        for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+            if (!isFirstParameter) {
+                queryStringBuilder.append("&");
+            }
+            queryStringBuilder.append(urlEncode(entry.getKey())).append("=").append(urlEncode(entry.getValue()));
+            isFirstParameter = false;
+        }
+        return queryStringBuilder.toString();
+    }
+
     private BackupResponse parseFileResponse(@NotNull APIRequest apiRequest) throws IOException, UnsuccessfulHttpException {
         String url = apiRequest.getUrl();
 
@@ -148,7 +248,12 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         String url = apiRequest.getUrl();
         APIRequest.RequestMethod method = apiRequest.getRequestMethod();
 
-        String payload = apiRequest.getData() != null ? apiRequest.getData().toJson() : "{}";
+        String payload;
+        if (apiRequest.getData() instanceof MapRequestData mapRequestData) {
+            payload = JsonUtil.toJson(mapRequestData.getValues());
+        } else {
+            payload = apiRequest.getData() != null ? apiRequest.getData().toJson() : "{}";
+        }
         logDebug("API request start. method={} url={} payload={}", method, url, payload);
 
         Request.Builder requestBuilder = new Request.Builder()

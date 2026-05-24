@@ -2,10 +2,7 @@ package org.threexui.impl;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.threexui.entity.api.Client;
-import org.threexui.entity.api.ClientTraffics;
-import org.threexui.entity.api.Inboard;
-import org.threexui.entity.api.StatusPanel;
+import org.threexui.entity.api.*;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 
 import java.io.File;
@@ -50,13 +47,13 @@ public interface ThreeUIAPI {
     List<String> getOnline() throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @param client updated customer data
+     * @param clientSettings updated customer data
      * @return {@link Boolean} status
      * <p><br>
      * Some data is better not to change. Since I myself have not yet understood what this can lead to.
      * It's best to use this to turn on and off. You can also change the limits.
      */
-    Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException;
+    Boolean updateClient(@NotNull ClientSettings clientSettings) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @return {@link StatusPanel} Status panel

@@ -3,16 +3,21 @@ package org.threexui.entity.api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import org.threexui.entity.enums.FlowEnum;
+import org.threexui.impl.APIRequestData;
+
+import java.io.Serializable;
 
 /**
  * Only for {@link Inboard}
  */
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientSettings {
+public class ClientSettings implements APIRequestData {
 
     private String email;
     private boolean enable;

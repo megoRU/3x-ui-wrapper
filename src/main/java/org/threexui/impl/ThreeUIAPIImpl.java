@@ -78,9 +78,9 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public Boolean updateClient(@NotNull Client client) throws UnsuccessfulHttpException, IOException {
-        String email = client.getClient().getEmail();
-        StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, client, email));
+    public Boolean updateClient(@NotNull ClientSettings clientSettings) throws UnsuccessfulHttpException, IOException {
+        String email = clientSettings.getEmail();
+        StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, clientSettings, email));
         return updateClient.isSuccess();
     }
 

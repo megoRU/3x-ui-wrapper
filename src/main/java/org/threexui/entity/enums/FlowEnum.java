@@ -1,12 +1,18 @@
 package org.threexui.entity.enums;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 
 @Getter
 public enum FlowEnum {
 
+    @SerializedName("xtls-rprx-vision")
     XLTS_RPRX_VISION("xtls-rprx-vision"),
+
+    @SerializedName("xtls-rprx-vision-udp443")
     XLTS_RPRX_VISION_UPD_443("xtls-rprx-vision-udp443"),
+
+    @SerializedName("")
     NONE("");
 
     private final String value;
@@ -17,13 +23,13 @@ public enum FlowEnum {
 
     public static FlowEnum find(String value) {
         if (value == null || value.isEmpty()) return FlowEnum.NONE;
-        FlowEnum[] values = FlowEnum.values();
-        for (FlowEnum version : values) {
-            String localValue = version.getValue();
-            if (localValue.equals(value)) {
+
+        for (FlowEnum version : FlowEnum.values()) {
+            if (version.getValue().equals(value)) {
                 return version;
             }
         }
+
         return null;
     }
 }

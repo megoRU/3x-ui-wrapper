@@ -107,13 +107,13 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public RawObjectResponse getInboundsOptions() throws UnsuccessfulHttpException, IOException {
-        return parseResponse(RawObjectResponse.class, new InboundsOptionsRequest(host));
+    public InboundsOptionsResponse getInboundsOptions() throws UnsuccessfulHttpException, IOException {
+        return parseResponse(InboundsOptionsResponse.class, new InboundsOptionsRequest(host));
     }
 
     @Override
-    public RawObjectResponse getInboundById(int id) throws UnsuccessfulHttpException, IOException {
-        return parseResponse(RawObjectResponse.class, new InboundByIdRequest(host, id));
+    public InboundGetResponse getInboundById(int id) throws UnsuccessfulHttpException, IOException {
+        return parseResponse(InboundGetResponse.class, new InboundByIdRequest(host, id));
     }
 
     @Override
@@ -127,18 +127,18 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public RawObjectResponse getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException {
-        return parseResponse(RawObjectResponse.class, new ClientByEmailRequest(host, email));
+    public ClientGetByEmailResponse getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException {
+        return parseResponse(ClientGetByEmailResponse.class, new ClientByEmailRequest(host, email));
     }
 
     @Override
-    public RawObjectResponse getClientTrafficByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException {
-        return parseResponse(RawObjectResponse.class, new ClientTrafficByEmailRequest(host, email));
+    public ClientTrafficResponse getClientTrafficByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException {
+        return parseResponse(ClientTrafficResponse.class, new ClientTrafficByEmailRequest(host, email));
     }
 
     @Override
-    public RawObjectResponse getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, IOException {
-        return parseResponse(RawObjectResponse.class, new APIRequest(host + "/panel/api/clients/list/paged" + toQueryString(queryParams), APIRequest.RequestMethod.GET) {});
+    public ClientsPagedResponse getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, IOException {
+        return parseResponse(ClientsPagedResponse.class, new APIRequest(host + "/panel/api/clients/list/paged" + toQueryString(queryParams), APIRequest.RequestMethod.GET) {});
     }
 
     @Override

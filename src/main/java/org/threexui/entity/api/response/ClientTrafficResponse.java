@@ -1,6 +1,5 @@
 package org.threexui.entity.api.response;
 
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import org.threexui.impl.APIObject;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RawObjectResponse implements APIObject {
+public class ClientTrafficResponse implements APIObject {
 
     @SerializedName("success")
     private boolean success;
@@ -19,5 +18,20 @@ public class RawObjectResponse implements APIObject {
     private String message;
 
     @SerializedName("obj")
-    private JsonElement obj;
+    private ClientTrafficObject obj;
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ClientTrafficObject {
+
+        @SerializedName("email")
+        private String email;
+
+        @SerializedName("up")
+        private long up;
+
+        @SerializedName("down")
+        private long down;
+    }
 }

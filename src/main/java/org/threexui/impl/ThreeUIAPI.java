@@ -3,7 +3,11 @@ package org.threexui.impl;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.threexui.entity.api.*;
-import org.threexui.entity.api.response.RawObjectResponse;
+import org.threexui.entity.api.response.ClientGetByEmailResponse;
+import org.threexui.entity.api.response.ClientTrafficResponse;
+import org.threexui.entity.api.response.ClientsPagedResponse;
+import org.threexui.entity.api.response.InboundGetResponse;
+import org.threexui.entity.api.response.InboundsOptionsResponse;
 import org.threexui.entity.api.response.StringObjectResponse;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 
@@ -79,15 +83,15 @@ public interface ThreeUIAPI {
     List<Inboard> getInboardsSlim() throws UnsuccessfulHttpException, IOException;
 
     /**
-     * @return {@link RawObjectResponse} Endpoint /panel/api/inbounds/options raw obj
+     * @return {@link InboundsOptionsResponse} Endpoint /panel/api/inbounds/options response
      */
-    RawObjectResponse getInboundsOptions() throws UnsuccessfulHttpException, IOException;
+    InboundsOptionsResponse getInboundsOptions() throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param id inbound identifier in panel database
-     * @return {@link RawObjectResponse} Endpoint /panel/api/inbounds/get/:id raw obj
+     * @return {@link InboundGetResponse} Endpoint /panel/api/inbounds/get/:id response
      */
-    RawObjectResponse getInboundById(int id) throws UnsuccessfulHttpException, IOException;
+    InboundGetResponse getInboundById(int id) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param id inbound identifier in panel database
@@ -103,21 +107,21 @@ public interface ThreeUIAPI {
 
     /**
      * @param email client.email → Shadowsocks / VMESS / VLESS / TROJAN
-     * @return {@link RawObjectResponse} Endpoint /panel/api/clients/get/:email raw obj
+     * @return {@link ClientGetByEmailResponse} Endpoint /panel/api/clients/get/:email response
      */
-    RawObjectResponse getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
+    ClientGetByEmailResponse getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param email client.email → Shadowsocks / VMESS / VLESS / TROJAN
-     * @return {@link RawObjectResponse} Endpoint /panel/api/clients/traffic/:email raw obj
+     * @return {@link ClientTrafficResponse} Endpoint /panel/api/clients/traffic/:email response
      */
-    RawObjectResponse getClientTrafficByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
+    ClientTrafficResponse getClientTrafficByEmail(@NotNull String email) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @param queryParams map of query parameters for /panel/api/clients/list/paged
-     * @return {@link RawObjectResponse} paged clients data in raw obj
+     * @return {@link ClientsPagedResponse} paged clients response
      */
-    RawObjectResponse getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, IOException;
+    ClientsPagedResponse getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, IOException;
 
     /**
      * @return {@link StatusPanel} Server status from /panel/api/server/status

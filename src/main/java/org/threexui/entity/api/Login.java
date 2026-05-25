@@ -1,15 +1,16 @@
 package org.threexui.entity.api;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.threexui.impl.APIObject;
-import org.threexui.impl.APIRequestData;
 
+@Builder
 @Getter
 @AllArgsConstructor
-public class Login implements APIObject, APIRequestData {
-
-    private final String username;
-    private final String password;
-    private final String twoFactorCode;
+@NoArgsConstructor
+public class Login implements APIObject {
+    private String username;
+    private String password;
 }

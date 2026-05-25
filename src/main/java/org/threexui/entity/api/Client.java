@@ -9,7 +9,6 @@ import org.threexui.impl.APIRequestData;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Client implements APIObject, APIRequestData {
-
     private ClientBuilder client;
     private int[] inboundIds;
 

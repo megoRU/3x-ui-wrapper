@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Settings implements APIObject {
-
     private List<ClientSettings> clients;
     private String decryption;
     private String[] fallbacks;

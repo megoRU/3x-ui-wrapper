@@ -1,5 +1,4 @@
 package org.threexui.entity.api;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,17 +6,15 @@ import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import org.threexui.entity.enums.FlowEnum;
 import org.threexui.impl.APIRequestData;
-
 import java.io.Serializable;
-
 /**
- * Only for {@link Inboard}
+ * Настройки клиента для входящего подключения.
  */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientSettings implements APIRequestData {
+public class ClientSettings implements APIRequestData  {
 
     private String email;
     private boolean enable;
@@ -32,9 +29,9 @@ public class ClientSettings implements APIRequestData {
     private String subId;
     private String tgId;
     private long totalGB;
-
     @Nullable
-    public FlowEnum getFlow() {
+    public FlowEnum getFlow()  {
+
         return FlowEnum.find(flow);
     }
 }

@@ -1,21 +1,17 @@
 package org.threexui.entity.api;
-
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 import lombok.*;
 import org.jetbrains.annotations.Nullable;
 import org.threexui.entity.enums.FlowEnum;
-
 import static com.aventrix.jnanoid.jnanoid.NanoIdUtils.DEFAULT_NUMBER_GENERATOR;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class ClientBuilder {
+public class ClientBuilder  {
 
     public static final char[] DEFAULT_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyz".toCharArray();
-
     private String id;
     private String email;
     private String auth = NanoIdUtils.randomNanoId(DEFAULT_NUMBER_GENERATOR, DEFAULT_ALPHABET, 16);

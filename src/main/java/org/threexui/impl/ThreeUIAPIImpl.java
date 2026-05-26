@@ -255,7 +255,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public ClientGetByEmailResponse.ClientGetByEmail getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, ThreeUIException, IOException {
+    public ClientGetByEmail getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, ThreeUIException, IOException {
         return parseResponse(ClientGetByEmailResponse.class, new ClientByEmailRequest(host, email)).getObj();
     }
 
@@ -265,9 +265,8 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public ClientsPagedResponse.ClientsPagedObject getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, ThreeUIException, IOException {
-        return parseResponse(ClientsPagedResponse.class, new APIRequest(host + "/panel/api/clients/list/paged" + toQueryString(queryParams), APIRequest.RequestMethod.GET) {
-        }).getObj();
+    public ClientsPaged getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, ThreeUIException, IOException {
+        return parseResponse(ClientsPagedResponse.class, new ClientListPagesRequest(host, queryParams)).getObj();
     }
 
     @Override
@@ -378,23 +377,5 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
                 throw new UnsuccessfulHttpException(response.code(), response.message());
             }
         }
-    }
-
-    private String toQueryString(@NotNull Map<String, String> queryParams) {
-        if (queryParams.isEmpty()) {
-            return "";
-        }
-        StringBuilder queryStringBuilder = new StringBuilder("?");
-        boolean isFirstParameter = true;
-        for (Map.Entry<String, String> entry : queryParams.entrySet()) {
-            if (!isFirstParameter) {
-                queryStringBuilder.append("&");
-            }
-            queryStringBuilder.append(entry.getKey());
-            queryStringBuilder.append("=");
-            queryStringBuilder.append(entry.getValue());
-            isFirstParameter = false;
-        }
-        return queryStringBuilder.toString();
     }
 }

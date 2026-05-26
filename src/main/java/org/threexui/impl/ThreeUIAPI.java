@@ -2,10 +2,9 @@ package org.threexui.impl;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.threexui.entity.api.ClientGetByEmail;
 import org.threexui.entity.api.*;
 import org.threexui.entity.api.response.BulkAdjustResponse.BulkAdjustData;
-import org.threexui.entity.api.response.ClientGetByEmailResponse;
-import org.threexui.entity.api.response.ClientsPagedResponse;
 import org.threexui.entity.api.response.NodeTestResponse.NodeTestData;
 import org.threexui.entity.exceptions.ThreeUIException;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
@@ -344,7 +343,7 @@ public interface ThreeUIAPI {
      * @param email email клиента
      * @return данные о клиенте и связанных входящих подключениях
      */
-    ClientGetByEmailResponse.ClientGetByEmail getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, ThreeUIException, IOException;
+    ClientGetByEmail getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, ThreeUIException, IOException;
 
     /**
      * Получить статистику трафика конкретного клиента по его email.
@@ -360,7 +359,7 @@ public interface ThreeUIAPI {
      * @param queryParams параметры запроса (page, pageSize, search и т.д.)
      * @return объект с пагинированным списком клиентов
      */
-    ClientsPagedResponse.ClientsPagedObject getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, ThreeUIException, IOException;
+    ClientsPaged getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, ThreeUIException, IOException;
 
     /**
      * Получить текущее состояние сервера и процесса Xray.

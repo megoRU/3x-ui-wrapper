@@ -1,14 +1,13 @@
 package org.threexui.entity.api.response;
-import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.threexui.entity.api.Inbound;
+
 import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

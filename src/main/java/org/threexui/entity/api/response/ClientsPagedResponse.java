@@ -4,9 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.threexui.entity.api.ClientTraffics;
-
-import java.util.List;
+import org.threexui.entity.api.ClientsPaged;
 
 @Getter
 @AllArgsConstructor
@@ -20,7 +18,7 @@ public class ClientsPagedResponse implements ApiResponse {
     private String message;
 
     @SerializedName("obj")
-    private ClientsPagedObject obj;
+    private ClientsPaged obj;
 
     @Override
     public boolean isSuccess() {
@@ -30,14 +28,5 @@ public class ClientsPagedResponse implements ApiResponse {
     @Override
     public String getMessage() {
         return message;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class ClientsPagedObject {
-
-        private List<ClientTraffics> items;
-        private int total;
     }
 }

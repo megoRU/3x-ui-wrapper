@@ -255,7 +255,7 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     @Override
-    public ClientGetByEmailResponse.ClientGetByEmailObject getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, ThreeUIException, IOException {
+    public ClientGetByEmailResponse.ClientGetByEmail getClientByEmail(@NotNull String email) throws UnsuccessfulHttpException, ThreeUIException, IOException {
         return parseResponse(ClientGetByEmailResponse.class, new ClientByEmailRequest(host, email)).getObj();
     }
 

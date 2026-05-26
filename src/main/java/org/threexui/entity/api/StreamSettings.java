@@ -1,47 +1,52 @@
 package org.threexui.entity.api;
+
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class StreamSettings  {
+public class StreamSettings {
 
     private String network;
     private String security;
     private List<ExternalProxy> externalProxy;
     private RealitySettings realitySettings;
     private TcpSettings tcpSettings;
-    public String getFirstSid()  {
 
+    public String getFirstSid() {
         return getRealitySettings().getShortIds().get(0);
     }
-    public String getBrowser()  {
 
+    public String getBrowser() {
         return getRealitySettings().getSettings().getFingerprint();
     }
-    public String getSni()  {
 
+    public String getSni() {
         return getRealitySettings().getServerNames().get(0);
     }
+
     @Getter
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ExternalProxy  {
+    public static class ExternalProxy {
 
         private String forceTls;
         private String dest;
         private int port;
         private String remark;
     }
+
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class RealitySettings  {
+    public static class RealitySettings {
 
         private boolean show;
         private int xver;
@@ -55,19 +60,21 @@ public class StreamSettings  {
         private List<String> shortIds;
         private Settings settings;
     }
+
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class TcpSettings  {
+    public static class TcpSettings {
 
         @SerializedName("acceptProxyProtocol")
         private boolean acceptProxyProtocol;
         private Header header;
     }
+
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class Settings  {
+    public static class Settings {
 
         private String publicKey;
         private String fingerprint;
@@ -75,10 +82,11 @@ public class StreamSettings  {
         private String spiderX;
         private String mldsa65Verify;
     }
+
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class Header  {
+    public static class Header {
 
         private String type;
     }

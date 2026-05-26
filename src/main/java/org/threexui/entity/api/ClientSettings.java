@@ -6,9 +6,9 @@ import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import org.threexui.entity.enums.FlowEnum;
 import org.threexui.impl.APIRequestData;
-import java.io.Serializable;
+
 /**
- * Настройки клиента для входящего подключения.
+ * Используется для обновления клиента
  */
 @Getter
 @Setter

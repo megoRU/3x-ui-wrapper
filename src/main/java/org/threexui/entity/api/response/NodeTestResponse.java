@@ -20,14 +20,20 @@ public class NodeTestResponse implements ApiResponse {
     private NodeTestData obj;
 
     @Override
-    public boolean isSuccess() { return success; }
+    public boolean isSuccess() {
+        return success;
+    }
+
     @Override
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class NodeTestData {
+
         private String status;
         private int latencyMs;
         private String xrayVersion;

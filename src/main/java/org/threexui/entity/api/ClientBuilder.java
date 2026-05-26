@@ -4,6 +4,10 @@ import lombok.*;
 import org.jetbrains.annotations.Nullable;
 import org.threexui.entity.enums.FlowEnum;
 import static com.aventrix.jnanoid.jnanoid.NanoIdUtils.DEFAULT_NUMBER_GENERATOR;
+
+/**
+ * Используется для создания нового клиента
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

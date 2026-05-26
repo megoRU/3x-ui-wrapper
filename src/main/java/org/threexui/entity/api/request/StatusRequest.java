@@ -1,4 +1,5 @@
 package org.threexui.entity.api.request;
+
 public class StatusRequest extends APIRequest  {
 
     public StatusRequest(String host)  {

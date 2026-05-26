@@ -20,7 +20,7 @@ public class ClientGetByEmailResponse implements ApiResponse {
     private String message;
 
     @SerializedName("obj")
-    private ClientGetByEmailObject obj;
+    private ClientGetByEmail obj;
 
     @Override
     public boolean isSuccess() {
@@ -35,7 +35,7 @@ public class ClientGetByEmailResponse implements ApiResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ClientGetByEmailObject {
+    public static class ClientGetByEmail {
 
         @SerializedName("client")
         private ClientTraffics client;

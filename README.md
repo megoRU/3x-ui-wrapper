@@ -2,14 +2,14 @@
 
 [![JitPack](https://jitpack.io/v/megoRU/3x-ui-wrapper.svg)](https://jitpack.io/#megoRU/3x-ui-wrapper)
 
-Java API wrapper for [3x-ui](https://github.com/MHSanaei/3x-ui), developed by [@megoRU](https://github.com/megoRU).
-Supports full interaction with the 3x-ui panel via HTTP API.
+Java API-обёртка для панели [3x-ui](https://github.com/MHSanaei/3x-ui), разработанная [@megoRU](https://github.com/megoRU).
+Позволяет полноценно взаимодействовать с панелью 3x-ui через HTTP API.
 
 ---
 
-## 📦 Installation (Maven)
+## 📦 Установка (Maven)
 
-Add JitPack repository and dependency:
+Добавьте репозиторий JitPack и зависимость:
 
 ```xml
 <repositories>
@@ -28,9 +28,9 @@ Add JitPack repository and dependency:
 
 ---
 
-## 🚀 Examples
+## 🚀 Примеры использования
 
-### ➖ Delete client config
+### ➖ Удаление конфигурации клиента
 
 ```java
 ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
@@ -41,10 +41,10 @@ ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
 
 boolean deleted = threeUIAPI.deleteClient("email");
 
-System.out.println("Client deleted: " + deleted);
+System.out.println("Клиент удалён: " + deleted);
 ```
 
-### ➕ Create client config
+### ➕ Создание конфигурации клиента
 
 ```java
 ThreeUIAPI threeUIAPI = new ThreeUIAPI.Builder()
@@ -66,11 +66,11 @@ client.setInboundId(1);
 
 boolean created = threeUIAPI.addClient(client);
 
-System.out.println("Client created: " + created);
+System.out.println("Клиент создан: " + created);
 ```
 
 ---
 
-## 📄 License
+## 📄 Лицензия
 
-This wrapper is distributed under the MIT License.
+Данная библиотека распространяется по лицензии MIT.

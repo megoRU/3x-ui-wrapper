@@ -14,6 +14,7 @@ import org.threexui.impl.APIObject;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InboundOption implements APIObject {
+
     private int id;
     private String remark;
     private String protocol;

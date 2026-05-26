@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientTraffics implements APIObject {
+
     private int id;
     private String email;
     private String subId;
@@ -62,6 +63,7 @@ public class ClientTraffics implements APIObject {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Traffic {
+
         private long id;
         private long inboundId;
         private boolean enable;

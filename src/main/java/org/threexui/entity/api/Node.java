@@ -13,6 +13,7 @@ import org.threexui.impl.APIRequestData;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Node implements APIObject, APIRequestData {
+
     private int id;
     private String name;
     private String remark;

@@ -14,6 +14,7 @@ import org.threexui.impl.APIObject;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InboundFallback implements APIObject {
+
     private int id;
     private int masterId;
     private int childId;

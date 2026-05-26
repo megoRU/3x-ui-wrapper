@@ -19,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Inbound implements APIObject, APIRequestData {
+
     private List<ClientStats> clientStats;
     private long down;
     private Settings settings;

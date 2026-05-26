@@ -36,6 +36,7 @@ public class ClientsPagedResponse implements ApiResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ClientsPagedObject {
+
         private List<ClientTraffics> items;
         private int total;
     }

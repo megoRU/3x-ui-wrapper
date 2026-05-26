@@ -15,8 +15,10 @@ public class ClientsOnlineResponse implements ApiResponse  {
 
     @SerializedName("success")
     private boolean success;
+
     @SerializedName("msg")
     private String message;
+
     @SerializedName("obj")
     private List<String> obj;
 }

@@ -11,6 +11,7 @@ import org.threexui.impl.APIObject;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Login implements APIObject {
+
     private String username;
     private String password;
 }

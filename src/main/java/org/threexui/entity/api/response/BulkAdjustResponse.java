@@ -11,22 +11,31 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BulkAdjustResponse implements ApiResponse {
+
     @SerializedName("success")
     private boolean success;
+
     @SerializedName("msg")
     private String message;
+
     @SerializedName("obj")
     private BulkAdjustData obj;
 
     @Override
-    public boolean isSuccess() { return success; }
+    public boolean isSuccess() {
+        return success;
+    }
+
     @Override
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class BulkAdjustData {
+
         private int adjusted;
         private List<SkipReason> skipped;
     }
@@ -35,6 +44,7 @@ public class BulkAdjustResponse implements ApiResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class SkipReason {
+
         private String email;
         private String reason;
     }

@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.threexui.entity.api.*;
 import org.threexui.entity.api.request.*;
 import org.threexui.entity.api.response.*;
+import org.threexui.entity.api.response.BulkAdjustResponse.BulkAdjustData;
+import org.threexui.entity.api.response.NodeTestResponse.NodeTestData;
 import org.threexui.entity.exceptions.ThreeUIException;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
-import org.threexui.entity.api.response.NodeTestResponse.NodeTestData;
-import org.threexui.entity.api.response.BulkAdjustResponse.BulkAdjustData;
 import org.threexui.utils.JsonUtil;
 
 import java.io.*;
@@ -266,7 +266,8 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
 
     @Override
     public ClientsPagedResponse.ClientsPagedObject getClientsPaged(@NotNull Map<String, String> queryParams) throws UnsuccessfulHttpException, ThreeUIException, IOException {
-        return parseResponse(ClientsPagedResponse.class, new APIRequest(host + "/panel/api/clients/list/paged" + toQueryString(queryParams), APIRequest.RequestMethod.GET) {}).getObj();
+        return parseResponse(ClientsPagedResponse.class, new APIRequest(host + "/panel/api/clients/list/paged" + toQueryString(queryParams), APIRequest.RequestMethod.GET) {
+        }).getObj();
     }
 
     @Override

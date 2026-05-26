@@ -11,15 +11,23 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientLinksResponse implements ApiResponse {
+
     @SerializedName("success")
     private boolean success;
+
     @SerializedName("msg")
     private String message;
+
     @SerializedName("obj")
     private List<String> obj;
 
     @Override
-    public boolean isSuccess() { return success; }
+    public boolean isSuccess() {
+        return success;
+    }
+
     @Override
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 }

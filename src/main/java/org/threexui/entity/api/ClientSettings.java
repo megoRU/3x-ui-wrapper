@@ -22,16 +22,12 @@ public class ClientSettings implements APIRequestData  {
     private String password;
     private String comment;
     private String security;
-    private String flow;
+    @Nullable
+    private FlowEnum flow;
     private String id;
     private int limitIp;
     private int reset;
     private String subId;
     private String tgId;
     private long totalGB;
-    @Nullable
-    public FlowEnum getFlow()  {
-
-        return FlowEnum.find(flow);
-    }
 }

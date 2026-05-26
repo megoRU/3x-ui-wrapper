@@ -11,6 +11,7 @@ import org.threexui.impl.APIObject;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StatusPanel implements APIObject {
+
     private double cpu;
     private Disk disk;
     private Mem mem;
@@ -24,6 +25,7 @@ public class StatusPanel implements APIObject {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Disk {
+
         private long current;
         private long total;
     }
@@ -32,6 +34,7 @@ public class StatusPanel implements APIObject {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Mem {
+
         private long current;
         private long total;
     }
@@ -40,6 +43,7 @@ public class StatusPanel implements APIObject {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class NetIO {
+
         private long up;
         private long down;
     }
@@ -48,6 +52,7 @@ public class StatusPanel implements APIObject {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Swap {
+
         private long current;
         private long total;
     }
@@ -56,6 +61,7 @@ public class StatusPanel implements APIObject {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Xray {
+
         private String state;
         private String version;
     }
@@ -64,6 +70,7 @@ public class StatusPanel implements APIObject {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Load {
+
         private double load1;
         private double load5;
         private double load15;

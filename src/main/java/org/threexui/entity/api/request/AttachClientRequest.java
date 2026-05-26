@@ -7,6 +7,7 @@ import org.threexui.impl.APIRequestData;
 import java.util.List;
 
 public class AttachClientRequest extends APIRequest {
+
     public AttachClientRequest(String host, String email, List<Integer> inboundIds) {
         super(String.format("%s/panel/api/clients/%s/attach", host, email), RequestMethod.POST, new InboundIdsData(inboundIds));
     }
@@ -14,6 +15,7 @@ public class AttachClientRequest extends APIRequest {
     @Getter
     @AllArgsConstructor
     private static class InboundIdsData implements APIRequestData {
+
         private List<Integer> inboundIds;
     }
 }

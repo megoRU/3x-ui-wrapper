@@ -16,8 +16,10 @@ public class InboundResponse implements ApiResponse  {
 
     @SerializedName("success")
     private boolean success;
+
     @SerializedName("msg")
     private String message;
+
     @SerializedName("obj")
     private List<Inbound> obj;
 }

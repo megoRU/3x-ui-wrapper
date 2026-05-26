@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TwoFactorResponse implements ApiResponse {
+
     @SerializedName("success")
     private boolean success;
     @SerializedName("msg")
@@ -17,9 +18,16 @@ public class TwoFactorResponse implements ApiResponse {
     private boolean obj;
 
     @Override
-    public boolean isSuccess() { return success; }
-    @Override
-    public String getMessage() { return message; }
+    public boolean isSuccess() {
+        return success;
+    }
 
-    public boolean getObj() { return obj; }
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    public boolean getObj() {
+        return obj;
+    }
 }

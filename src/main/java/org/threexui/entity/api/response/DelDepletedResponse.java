@@ -9,22 +9,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DelDepletedResponse implements ApiResponse {
+
     @SerializedName("success")
     private boolean success;
+
     @SerializedName("msg")
     private String message;
+
     @SerializedName("obj")
     private DelDepletedData obj;
 
     @Override
-    public boolean isSuccess() { return success; }
+    public boolean isSuccess() {
+        return success;
+    }
+
     @Override
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class DelDepletedData {
+
         private int deleted;
     }
 }

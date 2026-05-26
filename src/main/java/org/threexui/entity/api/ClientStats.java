@@ -1,20 +1,22 @@
 package org.threexui.entity.api;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * Статистика клиента для конкретного входящего подключения.
+ */
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientStats {
+public class ClientStats  {
 
     private long down;
     private long up;
     /**
-     * @value {@link Boolean}  returned always true
+     * Всегда возвращает true.
      */
     private boolean enable;
     private long expiryTime;

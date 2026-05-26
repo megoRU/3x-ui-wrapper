@@ -1,16 +1,17 @@
 package org.threexui.entity.api.response;
 
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.threexui.impl.APIObject;
+import org.threexui.entity.api.InboundOption;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class InboundsOptionsResponse implements APIObject {
+public class InboundsOptionsResponse implements ApiResponse {
 
     @SerializedName("success")
     private boolean success;
@@ -19,5 +20,15 @@ public class InboundsOptionsResponse implements APIObject {
     private String message;
 
     @SerializedName("obj")
-    private JsonElement obj;
+    private List<InboundOption> obj;
+
+    @Override
+    public boolean isSuccess() {
+        return success;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

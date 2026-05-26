@@ -4,15 +4,12 @@ import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.threexui.entity.api.ClientTraffics;
-import org.threexui.impl.APIObject;
-
-import java.util.List;
+import org.threexui.entity.api.ClientGetByEmail;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientGetByEmailResponse implements APIObject {
+public class ClientGetByEmailResponse implements ApiResponse {
 
     @SerializedName("success")
     private boolean success;
@@ -21,17 +18,15 @@ public class ClientGetByEmailResponse implements APIObject {
     private String message;
 
     @SerializedName("obj")
-    private ClientGetByEmailObject obj;
+    private ClientGetByEmail obj;
 
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class ClientGetByEmailObject {
+    @Override
+    public boolean isSuccess() {
+        return success;
+    }
 
-        @SerializedName("client")
-        private ClientTraffics client;
-
-        @SerializedName("inboundIds")
-        private List<Integer> inboundIds;
+    @Override
+    public String getMessage() {
+        return message;
     }
 }

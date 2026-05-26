@@ -1,51 +1,29 @@
 package org.threexui.entity.api;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.threexui.impl.APIObject;
-import org.threexui.impl.APIRequestData;
 
+@Builder
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class StatusPanel implements APIObject, APIRequestData {
+@NoArgsConstructor
+public class StatusPanel implements APIObject {
 
     private double cpu;
-    private Mem mem;
-    private Swap swap;
     private Disk disk;
+    private Mem mem;
     private NetIO netIO;
+    private Swap swap;
     private Xray xray;
-    private int tcpCount;
+    private long tcpCount;
     private Load load;
 
     @Getter
-    @Setter
-    @NoArgsConstructor
     @AllArgsConstructor
-    public static class Mem {
-
-        private long current;
-        private long total;
-    }
-
-    @Getter
-    @Setter
     @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Swap {
-
-        private long current;
-        private long total;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class Disk {
 
         private long current;
@@ -53,9 +31,17 @@ public class StatusPanel implements APIObject, APIRequestData {
     }
 
     @Getter
-    @Setter
-    @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Mem {
+
+        private long current;
+        private long total;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class NetIO {
 
         private long up;
@@ -63,9 +49,17 @@ public class StatusPanel implements APIObject, APIRequestData {
     }
 
     @Getter
-    @Setter
-    @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Swap {
+
+        private long current;
+        private long total;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Xray {
 
         private String state;
@@ -73,9 +67,8 @@ public class StatusPanel implements APIObject, APIRequestData {
     }
 
     @Getter
-    @Setter
-    @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Load {
 
         private double load1;

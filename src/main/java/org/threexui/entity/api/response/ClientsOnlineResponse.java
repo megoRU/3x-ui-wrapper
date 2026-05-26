@@ -1,15 +1,16 @@
 package org.threexui.entity.api.response;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.*;
-import org.threexui.impl.APIObject;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientsOnlineResponse implements APIObject {
+public class ClientsOnlineResponse implements ApiResponse {
 
     @SerializedName("success")
     private boolean success;

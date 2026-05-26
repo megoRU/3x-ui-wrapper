@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.threexui.impl.APIObject;
 
 import java.io.File;
 
@@ -12,7 +11,17 @@ import java.io.File;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BackupResponse implements APIObject {
+public class BackupResponse implements ApiResponse {
 
     private File file;
+
+    @Override
+    public boolean isSuccess() {
+        return file != null && file.exists();
+    }
+
+    @Override
+    public String getMessage() {
+        return null;
+    }
 }

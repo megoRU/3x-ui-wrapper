@@ -8,10 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import org.threexui.entity.enums.FlowEnum;
 import org.threexui.impl.APIRequestData;
 
-import java.io.Serializable;
-
 /**
- * Only for {@link Inboard}
+ * Используется для обновления клиента
  */
 @Getter
 @Setter

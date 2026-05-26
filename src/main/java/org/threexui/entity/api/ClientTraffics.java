@@ -33,37 +33,24 @@ public class ClientTraffics implements APIObject {
     private List<Integer> inboundIds;
     private Traffic traffic;
 
-    /**
-     * @return {@link String} Returns how many gigabytes the client downloaded in 2 decimal places. For example 1.94
-     */
     public String getDown() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         double count = (double) traffic.getDown() / 1024 / 1024 / 1024;
         return decimalFormat.format(count).replace(",", ".");
     }
 
-    /**
-     * @return {@link String} Returns how many gigabytes the client has uploaded in 2 decimal places. For example 1.94
-     */
     public String getUp() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         double count = (double) traffic.getUp() / 1024 / 1024 / 1024;
         return decimalFormat.format(count).replace(",", ".");
     }
 
-    /**
-     * @return {@link String} How much the client used up traffic. Download + Upload. For example 1.94
-     */
     public String getTotalUsed() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         double count = (double) (traffic.getUp() + traffic.getDown()) / 1024.0 / 1024.0 / 1024.0;
         return decimalFormat.format(count).replace(",", ".");
     }
 
-    /**
-     * @return {@link String} How much traffic is allocated in gigabytes. If not limited returns -1.
-     * For example 1.94 or -1
-     */
     public String getTotal() {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         if (traffic.getTotal() == 0) return "-1";

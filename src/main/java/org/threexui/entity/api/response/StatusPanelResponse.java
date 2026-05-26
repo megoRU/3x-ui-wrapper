@@ -5,19 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.threexui.entity.api.StatusPanel;
-import org.threexui.impl.APIObject;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StatusPanelResponse implements APIObject {
+public class StatusPanelResponse implements ApiResponse  {
 
     @SerializedName("success")
     private boolean success;
-
     @SerializedName("msg")
     private String message;
-
     @SerializedName("obj")
     private StatusPanel obj;
 }

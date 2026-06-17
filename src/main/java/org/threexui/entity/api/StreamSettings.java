@@ -17,18 +17,31 @@ public class StreamSettings {
     private String security;
     private List<ExternalProxy> externalProxy;
     private RealitySettings realitySettings;
+    private TlsSettings tlsSettings;
     private TcpSettings tcpSettings;
 
     public String getFirstSid() {
-        return getRealitySettings().getShortIds().get(0);
+        if (!security.equals("tls")) {
+            return getRealitySettings().getShortIds().get(0);
+        } else {
+            return "";
+        }
     }
 
     public String getBrowser() {
-        return getRealitySettings().getSettings().getFingerprint();
+        if (security.equals("tls")) {
+            return getTlsSettings().getSettings().getFingerprint();
+        } else {
+            return getRealitySettings().getSettings().getFingerprint();
+        }
     }
 
     public String getSni() {
-        return getRealitySettings().getServerNames().get(0);
+        if (security.equals("tls")) {
+            return getTlsSettings().getServerName();
+        } else {
+            return getRealitySettings().getServerNames().get(0);
+        }
     }
 
     @Getter
@@ -59,6 +72,51 @@ public class StreamSettings {
         private String mldsa65Seed;
         private List<String> shortIds;
         private Settings settings;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TlsSettings {
+
+        private String serverName;
+        private String minVersion;
+        private String maxVersion;
+        private String cipherSuites;
+        private boolean rejectUnknownSni;
+        private boolean disableSystemRoot;
+        private boolean enableSessionResumption;
+        private List<Certificate> certificates;
+        private List<String> alpn;
+        private String echServerKeys;
+        private TlsClientSettings settings;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TlsClientSettings {
+
+        private String fingerprint;
+        private String echConfigList;
+        private List<String> pinnedPeerCertSha256;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Certificate {
+
+        private String certificateFile;
+        private String keyFile;
+        private int ocspStapling;
+        private boolean oneTimeLoading;
+        private String usage;
+        private boolean buildChain;
+        private boolean useFile;
     }
 
     @Getter

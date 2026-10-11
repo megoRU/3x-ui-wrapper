@@ -3,28 +3,17 @@ package org.threexui.entity.api.request;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import okhttp3.HttpUrl;
 
 public class ClientListPagesRequest extends APIRequest {
 
     public ClientListPagesRequest(String host, Map<String, String> queryParams) {
-        super(String.format("%s/panel/api/clients/list/paged" + toQueryString(queryParams), host), RequestMethod.GET);
+        super(buildUrl(host, queryParams), RequestMethod.GET);
     }
 
-    private static String toQueryString(@NotNull Map<String, String> queryParams) {
-        if (queryParams.isEmpty()) {
-            return "";
-        }
-        StringBuilder queryStringBuilder = new StringBuilder("?");
-        boolean isFirstParameter = true;
-        for (Map.Entry<String, String> entry : queryParams.entrySet()) {
-            if (!isFirstParameter) {
-                queryStringBuilder.append("&");
-            }
-            queryStringBuilder.append(entry.getKey());
-            queryStringBuilder.append("=");
-            queryStringBuilder.append(entry.getValue());
-            isFirstParameter = false;
-        }
-        return queryStringBuilder.toString();
+    private static String buildUrl(String host, @NotNull Map<String, String> queryParams) {
+        HttpUrl.Builder builder = HttpUrl.get(host).newBuilder().addPathSegments("panel/api/clients/list/paged");
+        queryParams.forEach(builder::addQueryParameter);
+        return builder.build().toString();
     }
 }

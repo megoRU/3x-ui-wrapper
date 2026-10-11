@@ -15,5 +15,6 @@ public class StatusResponse implements ApiResponse  {
     @SerializedName("msg")
     private String message;
     @SerializedName("obj")
-    private Boolean obj;
+    // The API uses obj for booleans, IDs, and structured validation details.
+    private Object obj;
 }

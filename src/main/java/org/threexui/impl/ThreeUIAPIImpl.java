@@ -332,7 +332,8 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
         APIRequest.RequestMethod method = apiRequest.getRequestMethod();
 
         String payload = apiRequest.getData() != null ? apiRequest.getData().toJson() : "{}";
-        logDebug("API request start. method={} url={} payload={}", method, url, payload);
+        // Request bodies can contain API tokens, passwords, UUIDs and client credentials.
+        logDebug("API request start. method={} url={}", method, url);
 
         Request.Builder requestBuilder = new Request.Builder()
                 .url(url)
@@ -359,8 +360,6 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
                         url,
                         response.code(),
                         duration);
-
-                logDebug("API response body. url={} body={}", url, responseBody);
 
                 T result = JsonUtil.fromJson(responseBody, tClass);
                 if (!result.isSuccess()) {

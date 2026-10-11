@@ -3,6 +3,6 @@ package org.threexui.entity.api.request;
 public class ClearClientIpsRequest extends APIRequest {
 
     public ClearClientIpsRequest(String host, String email) {
-        super(String.format("%s/panel/api/clients/clearIps/%s", host, email), RequestMethod.POST);
+        super(pathUrl(host, "panel/api/clients/clearIps", email), RequestMethod.POST);
     }
 }

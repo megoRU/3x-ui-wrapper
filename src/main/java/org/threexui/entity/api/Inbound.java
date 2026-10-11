@@ -21,12 +21,15 @@ import java.util.List;
 public class Inbound implements APIObject, APIRequestData {
 
     private List<ClientStats> clientStats;
+    private boolean disableFlow;
     private long down;
     private Settings settings;
     private long up;
     private boolean enable;
+    private boolean excludeFromSub;
     private long expiryTime;
     private long id;
+    private long lastTrafficResetTime;
     private int userId;
     private String listen;
     private long port;
@@ -36,6 +39,14 @@ public class Inbound implements APIObject, APIRequestData {
     private String remark;
     private String tag;
     private long total;
+    private String trafficReset;
+    private int trafficResetDay;
+    private String shareAddr;
+    private String shareAddrStrategy;
+    private int subSortIndex;
+    private Long nodeId;
+    private String originNodeGuid;
+    private Object fallbackParent;
 
     @Getter
     @Setter

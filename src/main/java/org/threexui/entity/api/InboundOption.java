@@ -20,4 +20,5 @@ public class InboundOption implements APIObject {
     private String protocol;
     private int port;
     private boolean tlsFlowCapable;
+    private String ssMethod;
 }

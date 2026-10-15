@@ -18,16 +18,20 @@ public class ClientBuilder  {
     public static final char[] DEFAULT_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyz".toCharArray();
     private String id;
     private String email;
+    @Builder.Default
     private String auth = NanoIdUtils.randomNanoId(DEFAULT_NUMBER_GENERATOR, DEFAULT_ALPHABET, 16);
     private long totalGB;
     private long expiryTime;
+    @Builder.Default
     private String comment = "";
     @Nullable
     private FlowEnum flow;
     private int tgId;
     private int limitIp;
+    @Builder.Default
     private boolean enable = true;
-    private String subId = NanoIdUtils.randomNanoId(DEFAULT_NUMBER_GENERATOR, DEFAULT_ALPHABET, 16);;
+    @Builder.Default
+    private String subId = NanoIdUtils.randomNanoId(DEFAULT_NUMBER_GENERATOR, DEFAULT_ALPHABET, 16);
     private String password;
     private int reset;
     private long createdAt;

@@ -22,7 +22,7 @@ Java API-обёртка для панели [3x-ui](https://github.com/MHSanaei/
 <dependency>
     <groupId>com.github.megoRU</groupId>
     <artifactId>3x-ui-wrapper</artifactId>
-    <version>2.4.0</version>
+    <version>2.4.3</version>
 </dependency>
 ```
 

@@ -22,7 +22,7 @@ Java API-обёртка для панели [3x-ui](https://github.com/MHSanaei/
 <dependency>
     <groupId>com.github.megoRU</groupId>
     <artifactId>3x-ui-wrapper</artifactId>
-    <version>2.5.0</version>
+    <version>2.5.1</version>
 </dependency>
 ```
 
@@ -98,3 +98,9 @@ threeUIAPI.setClientEnable("email", false);
 threeUIAPI.setClientEnable("email", true);
 threeUIAPI.deleteClient("email", true); // сохранить статистику
 ```
+
+## Изменения 2.5.1
+
+- Исправлено ложное исключение при успешном включении/выключении клиента:
+  отсутствующее поле skipped или null теперь возвращается как пустой список.
+  Реальные пропуски и ошибки API по-прежнему обрабатываются как ошибки.

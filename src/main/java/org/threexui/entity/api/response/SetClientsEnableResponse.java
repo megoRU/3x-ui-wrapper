@@ -21,5 +21,10 @@ public class SetClientsEnableResponse implements ApiResponse {
 
         private int changed;
         private List<BulkAdjustResponse.SkipReason> skipped;
+
+        /** 3x-ui omits skipped when no clients were skipped (omitempty). */
+        public List<BulkAdjustResponse.SkipReason> getSkipped() {
+            return skipped == null ? List.of() : skipped;
+        }
     }
 }

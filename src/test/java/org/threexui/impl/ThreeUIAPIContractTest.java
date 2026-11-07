@@ -149,6 +149,20 @@ class ThreeUIAPIContractTest {
         assertTrue(requests.remove().path().endsWith("/bulkDisable"));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"", ",\"skipped\":null", ",\"skipped\":[]"})
+    void successfulEnableAcceptsOmittedNullOrEmptySkipped(String skippedField) throws Exception {
+        for (boolean enable : new boolean[]{true, false}) {
+            reply("{\"success\":true,\"obj\":{\"changed\":1" + skippedField + "}}");
+            assertTrue(api.setClientEnable("alice", enable));
+            reply("{\"success\":true,\"obj\":{\"changed\":1" + skippedField + "}}");
+            var result = api.setClientsEnable(List.of("alice"), enable);
+            assertNotNull(result.getSkipped());
+            assertTrue(result.getSkipped().isEmpty());
+            assertEquals(1, result.getChanged());
+        }
+    }
+
     @Test
     void singleClientSkipIsNotReportedAsSuccess() {
         reply("{\"success\":true,\"obj\":{\"changed\":0,\"skipped\":[{\"email\":\"alice\",\"reason\":\"not found\"}]}}");

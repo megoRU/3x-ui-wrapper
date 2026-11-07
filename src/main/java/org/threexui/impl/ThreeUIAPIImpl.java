@@ -143,9 +143,6 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     public Boolean setClientEnable(@NotNull String email, boolean enable) throws UnsuccessfulHttpException, ThreeUIException, IOException {
         SetClientsEnableResponse.EnableResult result = setClientsEnable(List.of(email), enable);
 
-        if (result.getSkipped() == null) {
-            throw new ThreeUIException("Missing skipped clients in enable result");
-        }
 
         if (!result.getSkipped().isEmpty()) {
             String reason = result.getSkipped().getFirst().getReason();

@@ -22,7 +22,7 @@ Java API-обёртка для панели [3x-ui](https://github.com/MHSanaei/
 <dependency>
     <groupId>com.github.megoRU</groupId>
     <artifactId>3x-ui-wrapper</artifactId>
-    <version>2.4.3</version>
+    <version>2.5.0</version>
 </dependency>
 ```
 
@@ -74,3 +74,27 @@ System.out.println("Клиент создан: " + created);
 ## 📄 Лицензия
 
 Данная библиотека распространяется по лицензии MIT.
+## Изменения 2.5.0
+
+- `updateClient` сохраняет текущие поля клиента и применяет только заданные значения.
+  Числовые поля и `enable` в `ClientSettings` теперь nullable: `null` означает не менять,
+  явный `0`/`false` означает установить значение. Обновление выполняет GET, затем POST;
+  конкурентные изменения одного клиента необходимо сериализовать на стороне приложения.
+- `tgId` использует 64-битный тип: `Long` в обновлении и `long` при создании.
+  После обновления зависимости пересоберите приложение (изменились сигнатуры модели).
+- `setClientEnable(email, enable)` переключает только состояние клиента, не меняя лимиты,
+  срок и реквизиты. `setClientsEnable(emails, enable)` возвращает `changed` и `skipped`;
+  проверяйте `skipped`, даже если API вернул `success: true`.
+- `deleteClient(email, true)` сохраняет статистику; обычный `deleteClient(email)` удаляет её.
+  Удаление затрагивает все привязанные inbound. Для одного inbound используйте `detachClient`.
+- Бэкапы проверяются по сигнатуре SQLite/PostgreSQL и сохраняются в уникальные временные
+  файлы `.db`/`.dump`. Вызывающий код должен переместить или удалить возвращённый файл.
+  JSON с ошибкой и HTML больше не сохраняются как успешные бэкапы.
+- Ошибка обновления/удаления не гарантирует отсутствие изменений: часть inbound могла
+  обработать запрос. Перед повтором проверяйте фактическое состояние панели.
+
+```java
+threeUIAPI.setClientEnable("email", false);
+threeUIAPI.setClientEnable("email", true);
+threeUIAPI.deleteClient("email", true); // сохранить статистику
+```

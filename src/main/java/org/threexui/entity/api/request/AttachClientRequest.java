@@ -9,7 +9,7 @@ import java.util.List;
 public class AttachClientRequest extends APIRequest {
 
     public AttachClientRequest(String host, String email, List<Integer> inboundIds) {
-        super(String.format("%s/panel/api/clients/%s/attach", host, email), RequestMethod.POST, new InboundIdsData(inboundIds));
+        super(pathUrl(host, "panel/api/clients", email, "attach"), RequestMethod.POST, new InboundIdsData(inboundIds));
     }
 
     @Getter

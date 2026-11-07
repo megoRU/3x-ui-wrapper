@@ -1,9 +1,11 @@
 package org.threexui.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.threexui.entity.api.*;
 import org.threexui.entity.api.request.*;
 import org.threexui.entity.api.response.*;
@@ -14,13 +16,17 @@ import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 import org.threexui.utils.JsonUtil;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Slf4j
 public class ThreeUIAPIImpl implements ThreeUIAPI {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ThreeUIAPIImpl.class);
     private static final OkHttpClient CLIENT = new OkHttpClient();
     private static final MediaType MEDIA_TYPE_JSON = MediaType.get("application/json");
 
@@ -35,15 +41,15 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
     }
 
     private void logInfo(String message, Object... args) {
-        if (devMode) LOGGER.info(message, args);
+        if (devMode) log.info(message, args);
     }
 
     private void logDebug(String message, Object... args) {
-        if (devMode) LOGGER.debug(message, args);
+        if (devMode) log.debug(message, args);
     }
 
     private void logError(String message, Object... args) {
-        LOGGER.error(message, args);
+        log.error(message, args);
     }
 
     @Override
@@ -66,7 +72,12 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
 
     @Override
     public Boolean deleteClient(@NotNull String email) throws UnsuccessfulHttpException, ThreeUIException, IOException {
-        StatusResponse deleteRequest = parseResponse(StatusResponse.class, new DeleteClientRequest(host, email));
+        return deleteClient(email, false);
+    }
+
+    @Override
+    public Boolean deleteClient(@NotNull String email, boolean keepTraffic) throws UnsuccessfulHttpException, ThreeUIException, IOException {
+        StatusResponse deleteRequest = parseResponse(StatusResponse.class, new DeleteClientRequest(host, email, keepTraffic));
         return deleteRequest.isSuccess();
     }
 
@@ -83,9 +94,65 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
 
     @Override
     public Boolean updateClient(@NotNull ClientSettings clientSettings) throws UnsuccessfulHttpException, ThreeUIException, IOException {
-        String email = clientSettings.getEmail();
-        StatusResponse updateClient = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, clientSettings, email));
-        return updateClient.isSuccess();
+        return updateClient(Objects.requireNonNull(clientSettings.getEmail(), "email"), clientSettings);
+    }
+
+    @Override
+    public Boolean updateClient(@NotNull String currentEmail, @NotNull ClientSettings clientSettings) throws UnsuccessfulHttpException, ThreeUIException, IOException {
+        ClientSnapshotResponse snapshot = parseResponse(ClientSnapshotResponse.class, new ClientByEmailRequest(host, currentEmail));
+        JsonObject snapshotData = snapshot.getObj() != null && snapshot.getObj().isJsonObject() ? snapshot.getObj().getAsJsonObject() : null;
+
+        if (snapshotData == null || !snapshotData.has("client") || !snapshotData.get("client").isJsonObject()) {
+            throw new ThreeUIException("Missing client data for update");
+        }
+
+        JsonObject payload = snapshotData.getAsJsonObject("client").deepCopy();
+        // The record ID is numeric; the update endpoint expects the protocol UUID as id.
+        payload.remove("id");
+        JsonElement uuid = payload.remove("uuid");
+
+        if (uuid != null && !uuid.isJsonNull()) {
+            payload.add("id", uuid);
+        }
+
+        JsonObject changes = JsonParser.parseString(clientSettings.toJson()).getAsJsonObject();
+        changes.entrySet().forEach(entry -> payload.add(entry.getKey(), entry.getValue()));
+        APIRequestData data = new APIRequestData() {
+            @Override
+            public String toJson() {
+                return payload.toString();
+            }
+        };
+        StatusResponse result = parseResponse(StatusResponse.class, new ClientUpdateRequest(host, data, currentEmail));
+
+        return result.isSuccess();
+    }
+
+    @Override
+    public SetClientsEnableResponse.EnableResult setClientsEnable(@NotNull List<String> emails, boolean enable) throws UnsuccessfulHttpException, ThreeUIException, IOException {
+        SetClientsEnableResponse response = parseResponse(SetClientsEnableResponse.class, new SetClientsEnableRequest(host, emails, enable));
+
+        if (response.getObj() == null) {
+            throw new ThreeUIException("Missing client enable result");
+        }
+
+        return response.getObj();
+    }
+
+    @Override
+    public Boolean setClientEnable(@NotNull String email, boolean enable) throws UnsuccessfulHttpException, ThreeUIException, IOException {
+        SetClientsEnableResponse.EnableResult result = setClientsEnable(List.of(email), enable);
+
+        if (result.getSkipped() == null) {
+            throw new ThreeUIException("Missing skipped clients in enable result");
+        }
+
+        if (!result.getSkipped().isEmpty()) {
+            String reason = result.getSkipped().getFirst().getReason();
+            throw new ThreeUIException("Client enable state was not applied: " + reason);
+        }
+
+        return true;
     }
 
     @Override
@@ -297,24 +364,44 @@ public class ThreeUIAPIImpl implements ThreeUIAPI {
             if (response.isSuccessful()) {
                 ResponseBody body = response.body();
 
-                File outputFile = new File("x-ui.db");
+                byte[] header = response.peekBody(16).bytes();
+                byte[] sqliteHeader = "SQLite format 3\0".getBytes(StandardCharsets.US_ASCII);
+                byte[] postgresHeader = "PGDMP".getBytes(StandardCharsets.US_ASCII);
+                boolean sqlite = Arrays.equals(header, sqliteHeader);
+                boolean postgres = header.length >= postgresHeader.length
+                        && Arrays.equals(Arrays.copyOf(header, postgresHeader.length), postgresHeader);
+                if (!sqlite && !postgres) {
+                    String errorBody = response.peekBody(65536).string();
+                    String message = "Invalid backup: expected SQLite database or PostgreSQL archive";
+                    try {
+                        StatusResponse error = JsonUtil.fromJson(errorBody, StatusResponse.class);
+                        if (error != null && error.getMessage() != null) {
+                            message = error.getMessage();
+                        }
+                    } catch (RuntimeException ignored) {
+                        // HTML, empty and malformed responses are not valid database backups.
+                    }
+                    throw new ThreeUIException(message);
+                }
+
+                Path outputPath = Files.createTempFile("3x-ui-backup-", sqlite ? ".db" : ".dump");
 
                 try (InputStream inputStream = body.byteStream();
-                     OutputStream outputStream = new FileOutputStream(outputFile)) {
-
+                     OutputStream outputStream = Files.newOutputStream(outputPath)) {
                     inputStream.transferTo(outputStream);
+                } catch (IOException | RuntimeException e) {
+                    try {
+                        Files.deleteIfExists(outputPath);
+                    } catch (IOException cleanupError) {
+                        e.addSuppressed(cleanupError);
+                    }
+                    throw e;
                 }
 
-                logInfo("Backup downloaded. file={} sizeBytes={} durationMs={}",
-                        outputFile.getAbsolutePath(),
-                        outputFile.length(),
-                        duration);
+                File outputFile = outputPath.toFile();
+                logInfo("Backup downloaded. file={} sizeBytes={} durationMs={}", outputFile.getAbsolutePath(), outputFile.length(), duration);
 
-                BackupResponse result = new BackupResponse(outputFile);
-                if (!result.isSuccess()) {
-                    throw new ThreeUIException("Failed to download backup");
-                }
-                return result;
+                return new BackupResponse(outputFile);
             } else {
                 logError("Backup request failed. url={} status={} message={} durationMs={}",
                         url,

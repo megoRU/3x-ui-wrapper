@@ -6,6 +6,7 @@ import org.threexui.entity.api.ClientGetByEmail;
 import org.threexui.entity.api.*;
 import org.threexui.entity.api.response.BulkAdjustResponse.BulkAdjustData;
 import org.threexui.entity.api.response.NodeTestResponse.NodeTestData;
+import org.threexui.entity.api.response.SetClientsEnableResponse.EnableResult;
 import org.threexui.entity.exceptions.ThreeUIException;
 import org.threexui.entity.exceptions.UnsuccessfulHttpException;
 
@@ -51,6 +52,15 @@ public interface ThreeUIAPI {
      */
     Boolean deleteClient(@NotNull String email) throws UnsuccessfulHttpException, ThreeUIException, IOException;
 
+    /** Removes the client from every attached inbound; optionally retains traffic. */
+    Boolean deleteClient(@NotNull String email, boolean keepTraffic) throws UnsuccessfulHttpException, ThreeUIException, IOException;
+
+    /** Changes only enable state. Inspect skipped even when the request succeeds. */
+    EnableResult setClientsEnable(@NotNull List<String> emails, boolean enable) throws UnsuccessfulHttpException, ThreeUIException, IOException;
+
+    /** Changes only enable state; throws if the API skips this client. */
+    Boolean setClientEnable(@NotNull String email, boolean enable) throws UnsuccessfulHttpException, ThreeUIException, IOException;
+
     /**
      * Получить список всех клиентов и их статистику трафика.
      *
@@ -72,6 +82,9 @@ public interface ThreeUIAPI {
      * @return true в случае успеха
      */
     Boolean updateClient(@NotNull ClientSettings clientSettings) throws UnsuccessfulHttpException, ThreeUIException, IOException;
+
+    /** Updates explicit fields, preserving the rest. currentEmail also permits renaming. */
+    Boolean updateClient(@NotNull String currentEmail, @NotNull ClientSettings clientSettings) throws UnsuccessfulHttpException, ThreeUIException, IOException;
 
     /**
      * Получить общую статистику состояния панели (память, CPU, диск и т.д.).

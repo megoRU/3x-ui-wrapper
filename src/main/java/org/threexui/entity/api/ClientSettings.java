@@ -18,17 +18,18 @@ import org.threexui.impl.APIRequestData;
 public class ClientSettings implements APIRequestData {
 
     private String email;
-    private boolean enable;
-    private long expiryTime;
+    private Boolean enable;
+    private Long expiryTime;
     private String password;
     private String comment;
     private String security;
     @Nullable
     private FlowEnum flow;
     private String id;
-    private int limitIp;
-    private int reset;
+    private Integer limitIp;
+    private Integer reset;
+    private Integer limitHwid;
     private String subId;
-    private String tgId;
-    private long totalGB;
+    private Long tgId;
+    private Long totalGB;
 }

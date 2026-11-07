@@ -28,7 +28,7 @@ public class ClientBuilder {
     private String group = "";
     @Nullable
     private FlowEnum flow;
-    private int tgId;
+    private long tgId;
     private int limitIp;
     private boolean enable = true;
     private String subId = NanoIdUtils.randomNanoId(DEFAULT_NUMBER_GENERATOR, DEFAULT_ALPHABET, 16);
